@@ -2,7 +2,9 @@
 快速入门
 
 
-## 项目文件说明
+## 工程项目文件说明
+
+<img width="441" alt="Snipaste_2023-08-17_23-25-20" src="https://github.com/yushuishu/qt-basic-learning/assets/50919172/1b885957-856d-4eb3-a05c-87098a74fe3d">
 
 
 ## 编译构建
