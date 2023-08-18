@@ -21,6 +21,12 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // 设置按钮文本
+    ui->btnMax->setText("最大化显示");
+    ui->btnNormal->setText("正常显示");
+    ui->btnMin->setText("最小化");
+    ui->btnClose->setText("关闭窗口");
+
     // Qt标准信号槽
     // connect() 连接信号和槽
     // connect(sender, signal, receiver, slot)
