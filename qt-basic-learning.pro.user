@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 12.0.0, 2023-11-27T23:01:49. -->
+<!-- Written by QtCreator 12.0.0, 2023-11-27T23:18:48. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -94,7 +94,7 @@
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">qt.qt6.653.win64_mingw_kit</value>
    <value type="qlonglong" key="ProjectExplorer.Target.ActiveBuildConfiguration">1</value>
    <value type="qlonglong" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
-   <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
+   <value type="qlonglong" key="ProjectExplorer.Target.ActiveRunConfiguration">2</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
     <value type="int" key="EnableQmlDebugging">0</value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">D:\itlike\workSpaceStudy\C&amp;C++\qt\qt-basic-learning\build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Debug</value>
@@ -136,8 +136,8 @@
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">D:\itlike\workSpaceStudy\C&amp;C++\qt\qt-basic-learning\build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">D:\itlike\workSpaceStudy\CPP\qt\qt-basic-learning\build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -240,14 +240,14 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a01_quick/a01_quick.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a01_quick/a01_quick.pro</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">a01_quick2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a01_quick/a01_quick.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a01_quick/a01_quick.pro</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a01_quick</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a01_quick</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -258,14 +258,14 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a02_signal_and_slot/a02_signal_and_slot.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a02_signal_and_slot/a02_signal_and_slot.pro</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">a02_signal_and_slot2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a02_signal_and_slot/a02_signal_and_slot.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a02_signal_and_slot/a02_signal_and_slot.pro</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a02_signal_and_slot</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a02_signal_and_slot</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -276,14 +276,14 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a03_connect/a03_connect.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a03_connect/a03_connect.pro</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">a03_connect2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a03_connect/a03_connect.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a03_connect/a03_connect.pro</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a03_connect</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a03_connect</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -294,14 +294,14 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a04_signal_slot_extension/a04_signal_slot_extension.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a04_signal_slot_extension/a04_signal_slot_extension.pro</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">a04_signal_slot_extension2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a04_signal_slot_extension/a04_signal_slot_extension.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a04_signal_slot_extension/a04_signal_slot_extension.pro</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a04_signal_slot_extension</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a04_signal_slot_extension</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -312,14 +312,14 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a05_QWidget/a05_QWidget.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/qt-basic-learning/a05_QWidget/a05_QWidget.pro</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">a05_QWidget2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a05_QWidget/a05_QWidget.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/qt-basic-learning/a05_QWidget/a05_QWidget.pro</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/C&amp;C++/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a05_QWidget</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">D:/itlike/workSpaceStudy/CPP/qt/qt-basic-learning/build-qt-basic-learning-Desktop_Qt_6_5_3_MinGW_64_bit-Release/a05_QWidget</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">5</value>
   </valuemap>
