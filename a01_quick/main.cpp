@@ -14,8 +14,7 @@
  * main.cpp 文件是 Qt 程序的入口文件，其中的 main 函数是入口函数
  */
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // 1. QApplication 是 Qt 框架提供的应用程序类
     // 作用：负责 Qt 中事件的处理，比如鼠标的单击事件，键盘的输入事件等
     QApplication a(argc, argv);
