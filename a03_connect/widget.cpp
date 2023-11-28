@@ -49,12 +49,12 @@ Widget::Widget(QWidget *parent)
     // 3、UI设计师界面-鼠标右键，转到槽
     // 在 UI 设计师界面，右键单击 btnMin，然后选择【转到槽…】，弹出窗口
     // 选择 clicked()即可生成并跳转到槽函数，即可在 widget.h 和 widget.cpp 中生成对应的代码，此时会根据按钮的 name 自动生成对应的槽函数
-
+    // 不推荐使用这种方式：https://github.com/KDE/clazy/blob/1.11/docs/checks/README-connect-by-name.md
 
     // 4、UI设计师界面-信号槽编辑器
     // 使用这种方式，实现点击 btnClose 按钮，关闭窗口
     // 进入到 UI 设计师界面，【View】菜单 ->【视图】->【Signal & Slots Editor】，在打开的信号槽编辑器中，点击绿色的加号+ 就可以连接信号和槽了：
-
+    // 不推荐使用这种方式：https://github.com/KDE/clazy/blob/1.11/docs/checks/README-connect-by-name.md
 
     // 5、 Lambda 表达式
     // 修改窗口的标题

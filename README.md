@@ -193,12 +193,14 @@ SIGNAL/SLOT（Qt4） 这两个宏，将函数名以及对应的参数，转换�
 ## UI设计师界面-鼠标右键，转到槽
 在 UI 设计师界面，右键单击 btnMin，然后选择【转到槽…】，弹出窗口，选择 clicked()即可生成并跳转到槽函数，即可在 widget.h 和 widget.cpp 中生成对应的代码，此时会根据按钮的 name 自动生成对应的槽函数
 
+不推荐使用这种方式：https://github.com/KDE/clazy/blob/1.11/docs/checks/README-connect-by-name.md
 
 ## UI设计师界面-信号槽编辑器
 使用这种方式，实现点击 btnClose 按钮，关闭窗口。
 
 进入到 UI 设计师界面，【View】菜单 ->【视图】->【Signal & Slots Editor】，在打开的信号槽编辑器中，点击绿色的加号+ 就可以连接信号和槽了：
 
+不推荐使用这种方式：https://github.com/KDE/clazy/blob/1.11/docs/checks/README-connect-by-name.md
 
 ## Lambda 表达式
 修改窗口的标题
@@ -307,7 +309,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget) {
     ui->setupUi(this);
 
-    //未指定父窗口，那么这个窗口就是独立的窗口，需要调用其show方法来显示
+    //未指定父窗口，那么这个窗口就是独立的窗口，需要调用其show方法来显示，运行之后，出现两个独立窗口
     //SubWidget* subWidget = new SubWidget();
     //subWidget->setWindowTitle("SubWidget");
     //subWidget->show();
@@ -332,18 +334,177 @@ Widget::~Widget() {
 ![Img](./FILES/README.md/img-20231128174414.png)
 
 
-### 窗口位置
+### 设置窗口属性
+
+位置、大小、标题、图标、资源文件
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-09-16 15:24
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+    class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget {
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+    void btnGetSize();
+    void btnSetSize();
+    void btnSetFixedSize();
+    void btnSetMinSize();
+    void btnSetMaxSize();
+    void btnMove();
+    void btnSetTitle();
+    void btnSetIcon();
+
+private:
+    Ui::Widget *ui;
+};
+#endif // WIDGET_H
+
+```
+
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+#include "QDebug"
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-09-16 15:24
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+
+    //未指定父窗口，那么这个窗口就是独立的窗口，需要调用其show方法来显示，运行之后，出现两个独立窗口
+    // SubWidget* subWidget = new SubWidget();
+    // subWidget->setWindowTitle("SubWidget");
+    // subWidget->show();
+
+    // 如果指定了父窗口，那么就不需要调用show方法了，因为父窗口显示时，会将其子窗口一起显示出来。
+    // SubWidget *subWidget = new SubWidget(this);
+    // subWidget->setWindowTitle("SubWidget");
+
+    connect(ui->btnGetSize, &QPushButton::clicked, this, [this] {
+        this->btnGetSize();
+    });
+    connect(ui->btnSetSize, &QPushButton::clicked, this, [this] {
+        this->btnSetSize();
+    });
+    connect(ui->btnSetFixedSize, &QPushButton::clicked, this, [this] {
+        this->btnSetFixedSize();
+    });
+    connect(ui->btnSetMinSize, &QPushButton::clicked, this, [this] {
+        this->btnSetMinSize();
+    });
+    connect(ui->btnSetMaxSize, &QPushButton::clicked, this, [this] {
+        this->btnSetMaxSize();
+    });
+    connect(ui->btnMove, &QPushButton::clicked, this, [this] {
+        this->btnMove();
+    });
+    connect(ui->btnSetTitle, &QPushButton::clicked, this, [this] {
+        this->btnSetTitle();
+    });
+    connect(ui->btnSetIcon, &QPushButton::clicked, this, [this] {
+        this->btnSetIcon();
+    });
+
+
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+
+void Widget::btnGetSize() {
+    qDebug() << "--------------获取窗口信息---------------";
+    QRect rect = this->geometry();
+    qDebug() << "左上：" << rect.topLeft();
+    qDebug() << "右上：" << rect.topRight();
+    qDebug() << "左下：" << rect.bottomLeft();
+    qDebug() << "右下：" << rect.bottomRight();
+    qDebug() << "宽：" << rect.width();
+    qDebug() << "高：" << rect.height();
+}
 
 
 
+void Widget::btnSetSize() {
+    qDebug() << "--------------设置窗口大小---------------";
+    this->resize(400, 400);
+}
 
 
-### 窗口大小
+void Widget::btnSetFixedSize() {
+    qDebug() << "--------------设置窗口固定大小---------------";
+    this->setFixedSize(500, 500);
+}
 
 
+void Widget::btnSetMinSize() {
+    qDebug() << "--------------设置窗口最小大小---------------";
+    this->setMinimumSize(300, 300);
+}
 
 
-### 窗口标题、图标、资源文件
+void Widget::btnSetMaxSize() {
+    qDebug() << "--------------设置窗口最大大小---------------";
+    this->setMaximumSize(600, 600);
+}
+
+
+void Widget::btnMove() {
+    qDebug() << "--------------设置窗口移动到：（100,100）---------------";
+    this->move(100, 100);
+}
+
+
+void Widget::btnSetTitle() {
+    qDebug() << "--------------设置窗口标题---------------";
+    this->setWindowTitle("标题05_QWidget");
+}
+
+
+void Widget::btnSetIcon() {
+    qDebug() << "--------------设置窗口Icon---------------";
+    // 不能用中文
+    this->setWindowIcon(QIcon(":/icon/windows_icon.ico"));
+}
+```
+
+### 图标、资源文件的使用
 
 
 

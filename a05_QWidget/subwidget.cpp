@@ -1,6 +1,7 @@
 #include "subwidget.h"
 #include "ui_subwidget.h"
 
+#include "QDebug"
 
 /**
  * @Author ：谁书-ss
@@ -16,8 +17,11 @@ SubWidget::SubWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SubWidget) {
     ui->setupUi(this);
+
 }
 
 SubWidget::~SubWidget() {
     delete ui;
 }
+
+

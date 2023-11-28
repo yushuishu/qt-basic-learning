@@ -26,6 +26,9 @@ public:
     explicit SubWidget(QWidget *parent = nullptr);
     ~SubWidget();
 
+private slots:
+
+
 private:
     Ui::SubWidget *ui;
 };
