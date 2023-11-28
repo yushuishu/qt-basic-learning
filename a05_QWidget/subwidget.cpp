@@ -14,12 +14,10 @@
 
 SubWidget::SubWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::SubWidget)
-{
+    ui(new Ui::SubWidget) {
     ui->setupUi(this);
 }
 
-SubWidget::~SubWidget()
-{
+SubWidget::~SubWidget() {
     delete ui;
 }
