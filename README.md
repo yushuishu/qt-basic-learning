@@ -1,6 +1,8 @@
 # qt-basic-learning
 
-Qt基础学习笔记
+Qt基础学习笔记。
+
+下面每个一级标题对应代码工程中的子项目名称。此README.md的内容由每个子项目下的README.md内容合并在一起，所以每个标题的内容都可以在子项目中的README.md找到
 
 
 
@@ -12,8 +14,9 @@ Qt基础学习笔记
 
 ## 工程项目文件说明
 
-<img width="441" alt="Snipaste_2023-08-17_23-25-20" src="https://github.com/yushuishu/qt-basic-learning/assets/50919172/1b885957-856d-4eb3-a05c-87098a74fe3d">
+![Img](./FILES/README.md/img-20231128171817.png)
 
+![Img](./FILES/README.md/img-20231128130248.png)
 
 ## 编译构建
 Qt6之后，官方建议是cmake，但是Qt6还是会支持qmake的，qmake相对来说是比较简单的。
@@ -264,8 +267,84 @@ connect(sender, SIGNAL(signal2), receiver, SLOT(fun()));
 
 # a05_QWidget
 
-
 ## 学习内容
+
+由于`QWidget`类是所有控件类的父类，并且在`a01_quick`中就已经使用到了，因此需要先来学习QWidget相关技术点。
+
+- 所有窗口类的基类
+  Qt中有3个窗口的基类：`QWidget`、`QMainWindow`、`QDialog`；在创建Qt工程时，会让我们选择继承自哪一个窗口类；其中，`QMainWindow`、`QDialog`都是继承自`QWidge`
+- 所有控件类的基类
+  Qt中的控件类（按钮、输入框、单选框等）也属于窗口类，它们的基类也是`QWidget`
+- 可以内嵌到其他窗口的内部，此时需要给其指定父窗口
+- 可以作为独立的窗口显示，此时不能给其指定父窗口
+
+基于案例一步步的使用！
+
+
+## 如何显示QWidget窗口
+
+1、新建一个基于QWidget的子窗口类，类名为`SubWidget`，
+
+2、以创建工程时创建的`Widget`为父类（`widget.cpp`），要显示子窗口`SubWidget`（`subWidget.cpp`），需要在父类`Widget`中调用，即在`widget.cpp`中调用
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+#include "subwidget.h"
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-09-16 15:24
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+
+    //未指定父窗口，那么这个窗口就是独立的窗口，需要调用其show方法来显示
+    //SubWidget* subWidget = new SubWidget();
+    //subWidget->setWindowTitle("SubWidget");
+    //subWidget->show();
+
+    // 如果指定了父窗口，那么就不需要调用show方法了，因为父窗口显示时，会将其子窗口一起显示出来。
+    SubWidget *subWidget = new SubWidget(this);
+    subWidget->setWindowTitle("SubWidget");
+
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+```
+
+## 常用的属性和方法
+
+### Qt帮助文档
+
+可以点击`Qt Creator`工具左侧的【帮助】，切换到【索引】，输入QWidget，就可以查看 QWidget 的详细帮助文档，如下：
+
+![Img](./FILES/README.md/img-20231128174414.png)
+
+
+### 窗口位置
+
+
+
+
+
+### 窗口大小
+
+
+
+
+### 窗口标题、图标、资源文件
+
 
 
 
