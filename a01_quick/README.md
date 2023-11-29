@@ -4,8 +4,9 @@
 
 ## 工程项目文件说明
 
-<img width="441" alt="Snipaste_2023-08-17_23-25-20" src="https://github.com/yushuishu/qt-basic-learning/assets/50919172/1b885957-856d-4eb3-a05c-87098a74fe3d">
+![Img](./FILES/README.md/img-20231128171817.png)
 
+![Img](./FILES/README.md/img-20231128130248.png)
 
 ## 编译构建
 Qt6之后，官方建议是cmake，但是Qt6还是会支持qmake的，qmake相对来说是比较简单的。

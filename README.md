@@ -210,6 +210,31 @@ connect(ui->btnSetTitle, &QPushButton::clicked, this, [this]() {
 });
 ```
 
+## 使用总结
+
+推荐使用`函数地址（Qt5）` 和 lambda 表达式。
+
+connect()连接使用方式在Qt6中变化不大，与Qt5的使用方式一致
+
+- SIGNAL/SLOT（Qt4）
+  传统的使用方式，传递的是信号和槽函数的字符串名称，编译时不检查类型和参数，运行时容易出错
+- 函数地址（Qt5）<font color="#dd0000">（强烈推荐使用）</font>
+  语法简洁，易于阅读；
+  没有字符串转换的开销；
+  编译时的类型检查，使得连接安全性得到增强；
+- UI 设计师界面 - 转到槽
+  灵活性不如代码，复杂页面需要通过代码实现；
+  如果使用其它ide开发，可能出现问题；
+  运行时动态创建和销毁的 UI 元素，使用UI界面设计，会比较困难。
+- UI 设计师界面 - 信号槽编辑器
+  灵活性不如代码，复杂页面需要通过代码实现；
+  如果使用其它ide开发，可能出现问题；
+  运行时动态创建和销毁的 UI 元素，使用UI界面设计，会比较困难。
+- lambda 表达式<font color="#dd0000">（强烈推荐使用）</font>
+  语法简洁，易于阅读；
+  没有字符串转换的开销；
+  编译时的类型检查，使得连接安全性得到增强；
+  可以直接在connect的地方定义一段处理逻辑，特别适合处理简单的，不值得单独定义槽函数的逻辑
 
 
 <br><br><br>
@@ -368,6 +393,8 @@ class Widget : public QWidget {
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+
+public slots:
     void btnGetSize();
     void btnSetSize();
     void btnSetFixedSize();
@@ -416,31 +443,22 @@ Widget::Widget(QWidget *parent)
     // SubWidget *subWidget = new SubWidget(this);
     // subWidget->setWindowTitle("SubWidget");
 
-    connect(ui->btnGetSize, &QPushButton::clicked, this, [this] {
-        this->btnGetSize();
-    });
-    connect(ui->btnSetSize, &QPushButton::clicked, this, [this] {
-        this->btnSetSize();
-    });
-    connect(ui->btnSetFixedSize, &QPushButton::clicked, this, [this] {
-        this->btnSetFixedSize();
-    });
-    connect(ui->btnSetMinSize, &QPushButton::clicked, this, [this] {
-        this->btnSetMinSize();
-    });
-    connect(ui->btnSetMaxSize, &QPushButton::clicked, this, [this] {
-        this->btnSetMaxSize();
-    });
-    connect(ui->btnMove, &QPushButton::clicked, this, [this] {
-        this->btnMove();
-    });
-    connect(ui->btnSetTitle, &QPushButton::clicked, this, [this] {
-        this->btnSetTitle();
-    });
-    connect(ui->btnSetIcon, &QPushButton::clicked, this, [this] {
-        this->btnSetIcon();
-    });
-
+    // 获取窗口大小，位置
+    connect(ui->btnGetSize, &QPushButton::clicked, this, &Widget::btnGetSize);
+    // 设置窗口大小
+    connect(ui->btnSetSize, &QPushButton::clicked, this, &Widget::btnSetSize);
+    // 设置窗口固定大小
+    connect(ui->btnSetFixedSize, &QPushButton::clicked, this, &Widget::btnSetFixedSize);
+    // 设置窗口最小大小
+    connect(ui->btnSetMinSize, &QPushButton::clicked, this, &Widget::btnSetMinSize);
+    // 设置窗口最大大小
+    connect(ui->btnSetMaxSize, &QPushButton::clicked, this, &Widget::btnSetMaxSize);
+    // 设置窗口移动到：（100,100）
+    connect(ui->btnMove, &QPushButton::clicked, this, &Widget::btnMove);
+    // 设置窗口标题
+    connect(ui->btnSetTitle, &QPushButton::clicked, this, &Widget::btnSetTitle);
+    // 设置窗口Icon
+    connect(ui->btnSetIcon, &QPushButton::clicked, this, &Widget::btnSetIcon);
 
 }
 
@@ -458,54 +476,57 @@ void Widget::btnGetSize() {
     qDebug() << "宽：" << rect.width();
     qDebug() << "高：" << rect.height();
 }
-
-
-
 void Widget::btnSetSize() {
     qDebug() << "--------------设置窗口大小---------------";
     this->resize(400, 400);
 }
-
-
 void Widget::btnSetFixedSize() {
     qDebug() << "--------------设置窗口固定大小---------------";
     this->setFixedSize(500, 500);
 }
-
-
 void Widget::btnSetMinSize() {
     qDebug() << "--------------设置窗口最小大小---------------";
     this->setMinimumSize(300, 300);
 }
-
-
 void Widget::btnSetMaxSize() {
     qDebug() << "--------------设置窗口最大大小---------------";
     this->setMaximumSize(600, 600);
 }
-
-
 void Widget::btnMove() {
     qDebug() << "--------------设置窗口移动到：（100,100）---------------";
     this->move(100, 100);
 }
-
-
 void Widget::btnSetTitle() {
     qDebug() << "--------------设置窗口标题---------------";
     this->setWindowTitle("标题05_QWidget");
 }
-
-
 void Widget::btnSetIcon() {
     qDebug() << "--------------设置窗口Icon---------------";
     // 不能用中文
     this->setWindowIcon(QIcon(":/icon/windows_icon.ico"));
 }
+
 ```
 
 ### 图标、资源文件的使用
 
+项目右键 > 添加新文件。如下图所示：
+![Img](./FILES/README.md/img-20231129095733.png)
 
+QT > Qt Resource File。如下图所示：
+![Img](./FILES/README.md/img-20231129095902.png)
 
+`文件名`不是具体导入的图片名或视频文件名称。这里的`文件名`相当于一个文件夹的名称，而文件夹下可以有多张图片或视频文件，所以这里的`文件名`其实就是一个资源文件的分组名。如下图所示：
+![Img](./FILES/README.md/img-20231129100122.png)
 
+点击下一步；点击完成之后，进入到资源编辑页面。如下图所示：
+![Img](./FILES/README.md/img-20231129101059.png)
+
+如果没有出现上面的资源编辑页面，就进行以下操作。如下图所示：
+![Img](./FILES/README.md/img-20231129101546.png)
+
+添加资源文件（图片、视频），操作完之后，记得`Ctrl + S`保存
+![Img](./FILES/README.md/img-20231129102051.png)
+
+查看预览资源
+![Img](./FILES/README.md/img-20231129102344.png)

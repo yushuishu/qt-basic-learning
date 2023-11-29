@@ -27,31 +27,22 @@ Widget::Widget(QWidget *parent)
     // SubWidget *subWidget = new SubWidget(this);
     // subWidget->setWindowTitle("SubWidget");
 
-    connect(ui->btnGetSize, &QPushButton::clicked, this, [this] {
-        this->btnGetSize();
-    });
-    connect(ui->btnSetSize, &QPushButton::clicked, this, [this] {
-        this->btnSetSize();
-    });
-    connect(ui->btnSetFixedSize, &QPushButton::clicked, this, [this] {
-        this->btnSetFixedSize();
-    });
-    connect(ui->btnSetMinSize, &QPushButton::clicked, this, [this] {
-        this->btnSetMinSize();
-    });
-    connect(ui->btnSetMaxSize, &QPushButton::clicked, this, [this] {
-        this->btnSetMaxSize();
-    });
-    connect(ui->btnMove, &QPushButton::clicked, this, [this] {
-        this->btnMove();
-    });
-    connect(ui->btnSetTitle, &QPushButton::clicked, this, [this] {
-        this->btnSetTitle();
-    });
-    connect(ui->btnSetIcon, &QPushButton::clicked, this, [this] {
-        this->btnSetIcon();
-    });
-
+    // 获取窗口大小，位置
+    connect(ui->btnGetSize, &QPushButton::clicked, this, &Widget::btnGetSize);
+    // 设置窗口大小
+    connect(ui->btnSetSize, &QPushButton::clicked, this, &Widget::btnSetSize);
+    // 设置窗口固定大小
+    connect(ui->btnSetFixedSize, &QPushButton::clicked, this, &Widget::btnSetFixedSize);
+    // 设置窗口最小大小
+    connect(ui->btnSetMinSize, &QPushButton::clicked, this, &Widget::btnSetMinSize);
+    // 设置窗口最大大小
+    connect(ui->btnSetMaxSize, &QPushButton::clicked, this, &Widget::btnSetMaxSize);
+    // 设置窗口移动到：（100,100）
+    connect(ui->btnMove, &QPushButton::clicked, this, &Widget::btnMove);
+    // 设置窗口标题
+    connect(ui->btnSetTitle, &QPushButton::clicked, this, &Widget::btnSetTitle);
+    // 设置窗口Icon
+    connect(ui->btnSetIcon, &QPushButton::clicked, this, &Widget::btnSetIcon);
 
 }
 
@@ -69,7 +60,6 @@ void Widget::btnGetSize() {
     qDebug() << "宽：" << rect.width();
     qDebug() << "高：" << rect.height();
 }
-
 
 
 void Widget::btnSetSize() {

@@ -26,6 +26,8 @@ class Widget : public QWidget {
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+
+public slots:
     void btnGetSize();
     void btnSetSize();
     void btnSetFixedSize();
