@@ -21,6 +21,7 @@ SIGNAL/SLOT（Qt4） 这两个宏，将函数名以及对应的参数，转换�
 
 如果 showMaximized 不小心写成了 showMaximize，点击【构建】菜单->【重新构建】，在【编译输出】窗口并不会报错，而在运行时报错
 
+不推荐使用这种方式：https://github.com/KDE/clazy/blob/1.11/docs/checks/README-connect-by-name.md
 
 ## 函数地址（Qt5）
 函数地址（Qt5），这种方式，编译时就会对函数类型，参数个数做检查。
