@@ -5,7 +5,8 @@ TEMPLATE = subdirs
         a02_signal_and_slot \
         a03_connect \
         a04_signal_slot_extension \
-        a05_QWidget
+        a05_QWidget \
+    a06_QPushButton
 
         OTHER_FILES += \
             README.md \
