@@ -541,7 +541,7 @@ QT > Qt Resource File。如下图所示：
 
 ## 学习内容
 
-QPushButton 是 Qt中的按钮，通常用于用户的点击，然后执行相应操作。
+`QPushButton`是Qt中的按钮，通常用于用户的点击，然后执行相应操作。
 
 - 字体、字体颜色、Icon
 - 按钮样式
@@ -550,6 +550,7 @@ QPushButton 是 Qt中的按钮，通常用于用户的点击，然后执行相�
 ## 案例
 
 **效果**
+
 ![Img](./FILES/README.md/img-20231201220110.png)
 
 
@@ -686,3 +687,15 @@ void Widget::signalButtonReleased() {
 
 
 ```
+
+
+
+<br><br><br>
+
+
+
+
+
+
+
+
