@@ -18,7 +18,11 @@ public:
     ~Widget();
 
 private slots:
-
+    void startStopButton();
+    void connectButton();
+    void signalButtonClicked();
+    void signalButtonPressed();
+    void signalButtonReleased();
 
 private:
     Ui::Widget *ui;

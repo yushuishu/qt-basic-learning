@@ -52,7 +52,7 @@
     <string>发送命令</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="ownButton">
+  <widget class="QPushButton" name="styleButton">
    <property name="geometry">
     <rect>
      <x>70</x>
