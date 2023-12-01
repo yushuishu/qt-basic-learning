@@ -3,6 +3,16 @@
 
 #include <QWidget>
 
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-11-30 12:55
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Widget;
