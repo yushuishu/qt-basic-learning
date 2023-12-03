@@ -4,7 +4,7 @@ Qt基础学习笔记。
 
 教程来源：https://blog.csdn.net/bili_mingwang/category_11945281.html
 
-下面每个一级标题对应代码工程中的子项目名称。此README.md的内容由每个子项目下的README.md内容合并在一起，所以每个标题的内容都可以在子项目中的README.md中找到，并且内容是保持一致的。
+下面每个一级标题对应代码工程中的子项目名称。为了方便浏览，此README.md的内容由每个子项目下的README.md内容合并在一起的，每个标题下的内容都可以在子项目中的README.md中找到，内容是一致的。
 
 
 
