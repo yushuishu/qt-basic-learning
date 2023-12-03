@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>files/cat.png</file>
+    </qresource>
+</RCC>
