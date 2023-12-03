@@ -7,7 +7,8 @@ TEMPLATE = subdirs
         a04_signal_slot_extension \
         a05_QWidget \
     a06_QPushButton \
-    a07_QLabel
+    a07_QLabel \
+    a08_QLineEdit
 
         OTHER_FILES += \
             README.md \
