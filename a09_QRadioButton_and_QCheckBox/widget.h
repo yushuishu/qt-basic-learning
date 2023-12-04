@@ -2,7 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
-
+#include <QButtonGroup>
 
 /**
  * @Author ：谁书-ss
@@ -28,7 +28,15 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+private slots:
+    void btnGetSelectionClicked();
+    void onRadioButtonClicked();
+    void cbAllClicked();
+    void onStateChanged();
+
 private:
     Ui::Widget *ui;
+    QButtonGroup* buttonGroup;
+    QButtonGroup* buttonGroup2;
 };
 #endif // WIDGET_H
