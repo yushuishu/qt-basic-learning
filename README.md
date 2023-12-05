@@ -1134,4 +1134,864 @@ void Widget::leSub2_EditingFinished() {
 
 
 
+<br><br><br>
+
+# a09_QRadioButton_and_QCheckBox
+
+## 学习内容
+
+- Qt中的单选按钮类是`QRadioButton`
+  它是一个可以切换选中（checked）或未选中（unchecked）状态的单选按钮，单选按钮常用在 “多选一” 的场景，也就是说，在一组单选按钮中，一次只能选中一个单选按钮。比如性别中的 “男女” 二选一，学历中的 “博士/硕士/本科/其他” 四选一，等等。
+- Qt中的复选按钮类是`QCheckBox`
+  它和单选按钮很相似，单选按钮常用在 “多选一” 的场景，而复选按钮常用在 "多选多"的场景比如喜欢的水果选项中，可以在 “苹果/桃/梨/橘子/香蕉” 中选择多个。
+
+
+## 属性和方法
+
+### 文本
+这两个是其父类 QAbstractButton 中的属性和方法，因此 QPushButton、QRadioButton、QCheckBox 都具有该属性
+```c++
+// 获取和设置显示的文本
+QString text() const
+void setText(const QString &text)
+```
+
+### 状态
+
+单选按钮，有选中（Checked）和非选中（UnChecked）这两种状态；
+```c++
+// 获取和设置单选按钮的选中状态
+bool isChecked() const
+void setChecked(bool)
+```
+
+复选按钮可以有三种状态：
+- Qt::Checked 选中
+- Qt::Unchecked 非选中
+- Qt::PartiallyChecked 半选中，比如当一组复选按钮中只选择了部分时，可以设置其父项为半选状态，如下
+
+可以设置复选按钮，是否支持三态，如下：
+```c++
+// 用于获取和设置是否支持三态
+bool isTristate() const
+void setTristate(bool y = true)
+```
+
+如果不支持三态，使用方法单选按钮一样，只有选中（Checked）和非选中（unchecked）两种状态，没有半选中状态（ PartiallyChecked ）
+
+此时可以使用如下获取复选按钮是否选中：
+```c++
+// 获取和设置复选按钮是否选中：checked/unchecked
+bool isChecked() const
+void setChecked(bool)
+```
+
+如果支持三态，除了选中（Checked）和非选中（unchecked）两种状态，还有半选中状态（ PartiallyChecked ）
+
+此时可以使用如下获取复选按钮的状态：
+```c++
+// 设置和获取复选按钮的状态
+Qt::CheckState checkState() const
+void setCheckState(Qt::CheckState state)
+```
+
+### 自动排他
+
+单选按钮实现的是 “多选一”，因此单选按钮的该属性默认是使能的，复选按钮同样可以设置是否自动排他
+```c++
+// 获取和设置自动排他
+bool autoExclusive() const
+void setAutoExclusive(bool)
+```
+
+## 案例
+
+**效果**
+
+![Img](./FILES/README.md/img-20231205203812.png)
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+#include <QButtonGroup>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-03 17:09
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+
+private slots:
+    void btnGetSelectionClicked();
+    void onRadioButtonClicked();
+    void cbAllClicked();
+    void onStateChanged();
+
+private:
+    Ui::Widget *ui;
+    QButtonGroup* buttonGroup;
+    QButtonGroup* buttonGroup2;
+};
+#endif // WIDGET_H
+
+```
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-03 17:09
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget)
+{
+    ui->setupUi(this);
+    this->setWindowTitle("单选按钮和多选按钮");
+
+    // =========================================================== 单选组件
+    // 第二组
+    ui->rb2_1->setChecked(true);
+    ui->rb2_4->setChecked(true);
+    // 第三组
+    ui->rb3_2->setChecked(true);
+    ui->rb3_3->setChecked(true);
+    connect(ui->btn3, &QPushButton::clicked, this, &Widget::btnGetSelectionClicked);
+    // 第四组
+    buttonGroup = new QButtonGroup(this);
+    buttonGroup->addButton(ui->rb4_1, 1);
+    buttonGroup->addButton(ui->rb4_2, 2);
+    ui->rb4_2->setChecked(true);
+    buttonGroup2 = new QButtonGroup(this);
+    buttonGroup2->addButton(ui->rb4_3, 3);
+    buttonGroup2->addButton(ui->rb4_4, 4);
+    buttonGroup2->addButton(ui->rb4_5, 5);
+    buttonGroup2->addButton(ui->rb4_6, 6);
+    ui->rb4_3->setChecked(true);
+
+    connect(ui->rb4_1, &QRadioButton::clicked, this, &Widget::onRadioButtonClicked);
+    connect(ui->rb4_2, &QRadioButton::clicked, this, &Widget::onRadioButtonClicked);
+    connect(ui->rb4_3, &QRadioButton::clicked, this, &Widget::onRadioButtonClicked);
+    connect(ui->rb4_4, &QRadioButton::clicked, this, &Widget::onRadioButtonClicked);
+    connect(ui->rb4_5, &QRadioButton::clicked, this, &Widget::onRadioButtonClicked);
+    connect(ui->rb4_6, &QRadioButton::clicked, this, &Widget::onRadioButtonClicked);
+
+
+    // =========================================================== 多选组件
+    // 这里需要将“全选”按钮的状态设置为false
+    // 鼠标点击时，只允许在checked和unchecked之间切换，不允许出现半选状态
+    ui->cbAll->setTristate(false);
+    // 多选按
+    connect(ui->cbAll, &QCheckBox::stateChanged, this, &Widget::cbAllClicked);
+    // 5个复选按钮对应同一个槽函数
+    connect(ui->cb1, &QCheckBox::stateChanged, this, &Widget::onStateChanged);
+    connect(ui->cb2, &QCheckBox::stateChanged, this, &Widget::onStateChanged);
+    connect(ui->cb3, &QCheckBox::stateChanged, this, &Widget::onStateChanged);
+    connect(ui->cb4, &QCheckBox::stateChanged, this, &Widget::onStateChanged);
+
+
+
+}
+
+Widget::~Widget()
+{
+    delete ui;
+}
+
+void Widget::btnGetSelectionClicked(){
+    QString s;
+
+    if(ui->rb3_1->isChecked()) {
+        s += ui->rb3_1->text();
+    } else if(ui->rb3_2->isChecked()) {
+        s += ui->rb3_2->text();
+    }
+
+    if(ui->rb3_3->isChecked()) {
+        s += ui->rb3_3->text();
+    } else if(ui->rb3_4->isChecked()) {
+        s += ui->rb3_4->text();
+    } else if(ui->rb3_5->isChecked()) {
+        s += ui->rb3_5->text();
+    } else if(ui->rb3_6->isChecked()) {
+        s += ui->rb3_6->text();
+    }
+
+    ui->te3->setText(s);
+}
+
+void Widget::onRadioButtonClicked()
+{
+    QString s;
+
+    int checkedGenderId = buttonGroup->checkedId();
+    if(checkedGenderId == 1) {
+        s += "男";
+    } else if(checkedGenderId == 2) {
+        s += "女";
+    }
+
+    int checkedEduId = buttonGroup2->checkedId();
+    if(checkedEduId == 3) {
+        s += "博士";
+    } else if(checkedEduId == 4) {
+        s += "硕士";
+    } else if(checkedEduId == 5) {
+        s += "本科";
+    } else if(checkedEduId == 6) {
+        s += "大专";
+    } else if(checkedEduId == 6) {
+        s += "其他";
+    }
+
+    ui->te4->setText(s);
+}
+
+void Widget::cbAllClicked() {
+    Qt::CheckState state = ui->cbAll->checkState();
+    if(state == Qt::Checked) {
+        ui->cb1->setChecked(true);
+        ui->cb2->setChecked(true);
+        ui->cb3->setChecked(true);
+        ui->cb4->setChecked(true);
+    } else if(state == Qt::Unchecked) {
+        ui->cb1->setChecked(false);
+        ui->cb2->setChecked(false);
+        ui->cb3->setChecked(false);
+        ui->cb4->setChecked(false);
+    } else {
+
+    }
+}
+
+void Widget::onStateChanged() {
+    QString s;
+
+    int cb1Checked = ui->cb1->isChecked();
+    int cb2Checked = ui->cb2->isChecked();
+    int cb3Checked = ui->cb3->isChecked();
+    int cb4Checked = ui->cb4->isChecked();
+
+    if(cb1Checked && cb2Checked && cb3Checked && cb4Checked) {
+        // 全部选中
+        ui->cbAll->setCheckState(Qt::Checked);
+    } else if (!(cb1Checked || cb2Checked || cb3Checked || cb4Checked)) {
+        // 全部未选中
+        ui->cbAll->setCheckState(Qt::Unchecked);
+    } else {
+        // 部分选中
+        ui->cbAll->setCheckState(Qt::PartiallyChecked);
+    }
+
+    if(cb1Checked) {
+        s += ui->cb1->text() += " ";
+    }
+    if(cb2Checked) {
+        s += ui->cb2->text() += " ";
+    }
+    if(cb3Checked) {
+        s += ui->cb3->text() += " ";
+    }
+    if(cb4Checked) {
+        s += ui->cb4->text() += " ";
+    }
+
+    ui->leResult->setText(s);
+}
+
+```
+
+
+
+<br><br><br>
+
+# a10_QComboBox
+
+## 学习内容
+
+Qt中的组合框是集 按钮和下拉列表于一体的控件，它占用的屏幕空间很小，对应的类是`QComboBox`
+
+
+## 属性和方法
+
+### 文本
+
+当前组合框中当前项的索引和文本
+```c++
+// 获取当前条目的索引和文本
+int currentIndex() const
+QString currentText() const
+
+// 获取和设置指定索引条目的文本    
+QString itemText(int index) const
+void setItemText(int index, const QString &text)
+```
+
+
+### 图标
+
+给条目添加图标
+
+```c++
+// 获取和设置对应索引条目的图标
+QIcon itemIcon(int index) const
+void setItemIcon(int index, const QIcon &icon)
+```
+
+
+### 插入和删除
+
+向组合框`QComboBox`中插入和删除项目
+
+**新增条目：可以一次新增一个条目，也可以一次新增多个条目**
+
+```c++
+// 一次新增一个条目
+void addItem(const QString &text, const QVariant &userData = QVariant())
+void addItem(const QIcon &icon, const QString &text, const QVariant &userData = QVariant())
+    
+// 一次新增多个条目    
+void addItems(const QStringList &texts)
+```
+
+**插入条目：可以一次插入一个条目，也可以一次插入多个条目**
+
+```c++
+// 一次插入一个条目
+void insertItem(int index, const QString &text, const QVariant &userData = QVariant())
+void insertItem(int index, const QIcon &icon, const QString &text, const QVariant &userData = QVariant())
+
+// 一次插入一个条目
+void insertItems(int index, const QStringList &list)
+```
+
+**插入策略：在插入条目时，还可以指定插入的策略**
+
+```c++
+// 获取和设置插入策略
+QComboBox::InsertPolicy insertPolicy() const
+void setInsertPolicy(QComboBox::InsertPolicy policy)
+```
+
+常用的插入策略有：
+
+- QComboBox::NoInsert 不插入
+- QComboBox::InsertAtTop 作为第一条条目插入（替换原第一条条目）
+- QComboBox::InsertAtCurrent 替换当前条目
+- QComboBox::InsertAtBottom 在最后一个条目之后插入
+- QComboBox::InsertAfterCurrent 在当前条目之后插入
+- QComboBox::InsertBeforeCurrent 在当前条目之前插入
+- QComboBox::InsertAlphabetically 按英文字母顺序插入
+
+**插入分隔符：用于在条目之间插入一条分隔符**
+
+```c++
+// 在指定索引位置处插入分隔符
+void insertSeparator(int index)
+```
+
+**删除条目：删除指定索引位置的条目**
+
+```c++
+// 删除指定索引的条目
+void removeItem(int index)
+```
+
+
+
+### 信号槽
+
+```c++
+// 当前选中的条目变化时，会发射这两个信号
+void currentIndexChanged(int index)
+void currentTextChanged(const QString &text)
+```
+
+## 案例
+
+**效果**
+
+![Img](./FILES/README.md/img-20231205205535.png)
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-05 16:24
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+
+private slots:
+    void onCboUniversityChanged(int index);
+    void onCboProvinceChanged(int index);
+    void onCboCityChanged(int index);
+    void onLineEditChanged();
+
+private:
+    Ui::Widget *ui;
+};
+#endif // WIDGET_H
+
+```
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-05 16:24
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QStringList gdCityList = {"广州市", "深圳市", "珠海市", "东莞市"};
+QStringList zjCityList = {"杭州市", "宁波市", "温州市", "绍兴市"};
+QStringList sdCityList = {"济南市", "青岛市", "烟台市", "威海市"};
+QStringList hbCityList = {"石家庄市", "保定市", "廊坊市", "衡水市"};
+QStringList nmCityList = {"呼和浩特市", "包头市", "呼伦贝尔市", "赤峰市"};
+QStringList hnCityList = {"郑州市", "新乡市", "鹤壁市", "安阳市", "濮阳市"};
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+    this->setWindowTitle("学习QcomboBox组件");
+
+    // 添加大学
+    ui->cboUniversity->addItem("清华大学");
+    ui->cboUniversity->addItem("北京大学");
+    ui->cboUniversity->addItem("中国人民大学");
+
+    // 添加省份
+    ui->cboProvince->addItem("广东省");
+    ui->cboProvince->addItem("浙江省");
+    ui->cboProvince->addItem("山东省");
+    ui->cboProvince->addItem("河北省");
+    ui->cboProvince->addItem("内蒙古自治区省");
+    ui->cboProvince->addItem("河南省");
+
+    // 为省份条目添加图标
+    ui->cboProvince->setItemIcon(0, QIcon(":/icon/gd.ico"));
+    ui->cboProvince->setItemIcon(1, QIcon(":/icon/zj.ico"));
+    ui->cboProvince->setItemIcon(2, QIcon(":/icon/sd.ico"));
+    ui->cboProvince->setItemIcon(3, QIcon(":/icon/hb.ico"));
+    ui->cboProvince->setItemIcon(4, QIcon(":/icon/nm.ico"));
+    ui->cboProvince->setItemIcon(5, QIcon(":/icon/he.ico"));
+    // 默认选中第一项-广东省
+    ui->cboProvince->setCurrentIndex(0);
+
+    // 添加城市
+    ui->cboCity->addItems(gdCityList);
+
+    // 信号槽
+    connect(ui->cboUniversity, &QComboBox::currentIndexChanged, this, &Widget::onCboUniversityChanged);
+    connect(ui->cboProvince, &QComboBox::currentIndexChanged, this, &Widget::onCboProvinceChanged);
+    connect(ui->cboCity, &QComboBox::currentIndexChanged, this, &Widget::onCboCityChanged);
+
+    // 姓名文本框变化时，更新结果
+    connect(ui->leName, &QLineEdit::textChanged, this, &Widget::onLineEditChanged);
+
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+
+void Widget::onCboUniversityChanged(int index) {
+    // 获取姓名、大学、省份、城市
+    QString name = ui->leName->text();
+    QString university = ui->cboUniversity->currentText();
+    QString province = ui->cboProvince->currentText();
+    QString city = ui->cboCity->currentText();
+
+    if(!name.isEmpty()) {
+        ui->leResult->setText(name + "毕业于" + university + ", 来自" + province + city);
+    }
+}
+
+void Widget::onCboProvinceChanged(int index) {
+    // 先将city对应的列表清空
+    ui->cboCity->clear();
+
+    switch (index) {
+    case 0:
+        ui->cboCity->addItems(gdCityList);
+        break;
+    case 1:
+        ui->cboCity->addItems(zjCityList);
+        break;
+    case 2:
+        ui->cboCity->addItems(sdCityList);
+        break;
+    case 3:
+        ui->cboCity->addItems(hbCityList);
+        break;
+    case 4:
+        ui->cboCity->addItems(nmCityList);
+        break;
+    case 5:
+        ui->cboCity->addItems(hnCityList);
+        break;
+    default:
+        break;
+    }
+
+    // 获取姓名、大学、省份、城市
+    QString name = ui->leName->text();
+    QString university = ui->cboUniversity->currentText();
+    QString province = ui->cboProvince->currentText();
+    QString city = ui->cboCity->currentText();
+
+    if(!name.isEmpty()) {
+        ui->leResult->setText(name + "毕业于" + university + ", 来自" + province + city);
+    }
+}
+
+void Widget::onCboCityChanged(int index) {
+    // 获取姓名、大学、省份、城市
+    QString name = ui->leName->text();
+    QString university = ui->cboUniversity->currentText();
+    QString province = ui->cboProvince->currentText();
+    QString city = ui->cboCity->currentText();
+
+    if(!name.isEmpty()) {
+        ui->leResult->setText(name + "毕业于" + university + ", 来自" + province + city);
+    }
+}
+
+void Widget::onLineEditChanged() {
+    // 获取姓名、大学、省份、城市
+    QString name = ui->leName->text();
+    QString university = ui->cboUniversity->currentText();
+    QString province = ui->cboProvince->currentText();
+    QString city = ui->cboCity->currentText();
+
+    if(!name.isEmpty()) {
+        ui->leResult->setText(name + "毕业于" + university + ", 来自" + province + city);
+    }
+}
+
+```
+
+
+
+<br><br><br>
+
+# a11_QSpinBox
+
+## 学习内容
+
+微调框`QSpinBox`，允许按照一定的步长，来增加或减少其中显示的数值
+
+修改微调框数值的方式包括：
+- 单击右侧的向上/向下按钮
+- 按键盘的向上/向下键
+- 在微调框获取焦点时，通过鼠标滚轮的上下滚动
+- 手动输入
+
+`QSpinBox` ：用于整数的显示和输入
+`DoubleSpinBox` ：用于浮点数的显示和输入
+
+它们都是 `QAbstractSpinBox` 的子类，具有大多数相同的属性，只是参数类型不同（一个`int`，一个`double`）
+
+
+## 属性和方法
+
+### 值
+
+微调框和值相关的属性包括：当前值、最大值、最小值
+
+```c++
+// 获取和设置当前值
+int value() const
+void setValue(int val)
+
+// 获取和设置最大值
+int maximum() const
+void setMaximum(int max)
+
+// 获取和设置最小值
+int minimum() const
+void setMinimum(int min)
+
+// 一次设置最大值和最小值
+void setRange(int minimum, int maximum)
+```
+
+
+### 步长
+
+步长是指按右侧上下调整按钮时的单步改变值，也就是按一次，增加或减少的值
+
+```c++
+// 获取和设置步长
+ int singleStep() const
+ void setSingleStep(int val)
+```
+
+
+### 循环
+
+`wrapping` 属性用于设置是否允许循环
+
+比如范围设置为 `0-99`
+
+- 当数值达到 `99` 时，再点击向上的按钮，此时数值会变为 `0`
+- 当数值达到 `0` 时，再点击向下的按钮，此时数值会变为 `99`
+
+```c++
+// 获取和设置是否允许循环
+bool wrapping() const
+void setWrapping(bool w)
+```
+
+
+### 加速
+
+用于设置数值增加和减少的速度
+
+如果设置为 `true`，随着长按向上/向下箭头时间的增加，数值会加速增加/减少。
+
+```c++
+// 获取和设置是否允许加速
+bool isAccelerated() const
+void setAccelerated(bool on)
+```
+
+
+### 前缀、后缀
+
+用于设置微调框的前缀和后缀显示，比如，如果微调框中显示的是重量，可以添加一个 KG 的后缀，如果微调框中显示的是单价，可以添加一个 ￥ 的前缀
+
+```c++
+// 获取和设置前缀
+QString prefix() const
+void setPrefix(const QString &prefix)
+ 
+// 获取和设置后缀
+QString suffix() const
+void setSuffix(const QString &suffix)
+```
+
+
+### 信号槽
+
+当微调框中的数值发生变化时，会发射 `valueChanged` 信号
+
+```c++
+void valueChanged(int i)
+```
+
+
+## 案例
+
+**效果**
+
+![Img](./FILES/README.md/img-20231205210112.png)
+
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-05 17:14
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+
+private slots:
+    void sbPriceChanged(double privce);
+    void sbWeightChanged(int weight);
+
+private:
+    Ui::Widget *ui;
+};
+#endif // WIDGET_H
+
+```
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-05 17:14
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+    this->setWindowTitle("学习微调框QSpinBox");
+
+    // 1、设置单价
+    // 设置最大值和最小值
+    ui->sbPrice->setMinimum(1);
+    ui->sbPrice->setMaximum(100);
+    // ui->sbPrice->setRange(1, 100);
+
+    // 设置前缀
+    ui->sbPrice->setPrefix("￥");
+
+    // 设置步长
+    ui->sbPrice->setSingleStep(1);
+
+    // 设置加速
+    ui->sbPrice->setAccelerated(true);
+
+    // 设置循环
+    ui->sbPrice->setWrapping(true);
+
+
+
+    // 2、设置重量
+    // 设置最大值和最小值
+    ui->sbWeight->setMaximum(200);
+    ui->sbWeight->setMinimum(100);
+    // ui->sbWeight->setRange(100, 200);
+
+    // 设置后缀
+    ui->sbWeight->setSuffix(" KG");
+
+    // 设置步长
+    ui->sbWeight->setSingleStep(1);
+
+    // 设置加速
+    ui->sbWeight->setAccelerated(true);
+
+    // 设置循环
+    ui->sbWeight->setWrapping(true);
+
+
+
+    connect(ui->sbPrice, &QSpinBox::valueChanged, this, &Widget::sbPriceChanged);
+    connect(ui->sbWeight, &QSpinBox::valueChanged, this, &Widget::sbWeightChanged);
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+
+void Widget::sbPriceChanged(double privce) {
+    double price = privce;
+    // double price = ui->dsbPrice->value();
+
+    int weight = ui->sbWeight->value();
+
+    ui->leTotal->setText(QString::number(price * weight));
+}
+
+void Widget::sbWeightChanged(int weight) {
+    double price = ui->sbPrice->value();
+
+    // int weight = ui->sbWeight->value();
+
+    ui->leTotal->setText(QString::number(price * weight));
+}
+
+```
+
+
+
+<br><br><br>
+
+
+
+
+
+
+
 

@@ -28,13 +28,15 @@ Widget::Widget(QWidget *parent)
     ui->sbPrice->setPrefix("￥");
 
     // 设置步长
-    ui->sbPrice->setSingleStep(0.5);
+    ui->sbPrice->setSingleStep(1);
 
     // 设置加速
     ui->sbPrice->setAccelerated(true);
 
     // 设置循环
     ui->sbPrice->setWrapping(true);
+
+
 
     // 2、设置重量
     // 设置最大值和最小值
@@ -53,7 +55,8 @@ Widget::Widget(QWidget *parent)
 
     // 设置循环
     ui->sbWeight->setWrapping(true);
-    &QSpinBox::
+
+
 
     connect(ui->sbPrice, &QSpinBox::valueChanged, this, &Widget::sbPriceChanged);
     connect(ui->sbWeight, &QSpinBox::valueChanged, this, &Widget::sbWeightChanged);
