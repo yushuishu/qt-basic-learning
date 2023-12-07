@@ -12,7 +12,8 @@ TEMPLATE = subdirs
     a09_QRadioButton_and_QCheckBox \
     a10_QComboBox \
     a11_QSpinBox \
-    a12_QSlider
+    a12_QSlider \
+    a13_QProgressBar
 
         OTHER_FILES += \
             README.md \
