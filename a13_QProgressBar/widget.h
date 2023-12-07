@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "QTimer"
+#include "QMessageBox"
 
 /**
  * @Author ：谁书-ss
@@ -31,9 +32,15 @@ public:
 private slots:
     void btnFileDownload();
     void btnFileCopy();
+    void onFileDownloadTimeout();
+    void onFileCopyTimeout();
 
 
 private:
     Ui::Widget *ui;
+
+    QTimer *mTimerFileDownload;
+    QTimer *mTimerFileCopy;
+
 };
 #endif // WIDGET_H
