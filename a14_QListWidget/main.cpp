@@ -9,7 +9,7 @@
  * @IDE ：Qt Creator
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：
+ * @Description ：Qt 中的列表框控件，对应的类是 QListWidget，它用于显示多个列表项，列表项对应的类是 QListWidgetItem
  * <p></p>
  */
 
