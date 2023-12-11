@@ -2,7 +2,8 @@
 #define WIDGET_H
 
 #include <QWidget>
-
+#include <QListWidgetItem>
+#include <QButtonGroup>
 
 /**
  * @Author ：谁书-ss
@@ -27,8 +28,16 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-
+private slots:
+    void rbModeClicked();
+    void onItemClicked(QListWidgetItem *item);
+    void onItemDoubleClicked(QListWidgetItem *item);
+    void onBtnAddClicked();
+    void onBtnInsertClicked();
+    void onBtnDeleteClicked();
 private:
     Ui::Widget *ui;
+
+    QButtonGroup * operateButtonGroup;
 };
 #endif // WIDGET_H
