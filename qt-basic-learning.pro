@@ -13,7 +13,8 @@ TEMPLATE = subdirs
     a10_QComboBox \
     a11_QSpinBox \
     a12_QSlider \
-    a13_QProgressBar
+    a13_QProgressBar \
+    a14_QListWidget
 
         OTHER_FILES += \
             README.md \
