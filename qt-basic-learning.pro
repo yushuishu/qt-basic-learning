@@ -14,7 +14,8 @@ TEMPLATE = subdirs
     a11_QSpinBox \
     a12_QSlider \
     a13_QProgressBar \
-    a14_QListWidget
+    a14_QListWidget \
+    a15_QTableWidget
 
         OTHER_FILES += \
             README.md \
