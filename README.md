@@ -1988,7 +1988,866 @@ void Widget::sbWeightChanged(int weight) {
 
 <br><br><br>
 
+# a12_QSlider
 
+## 学习内容
+
+`QSlider`是滑动条控件，滑动条可以在一个范围内拖动，并将其位置转换为整数。
+
+
+## 属性和方法
+
+`QSlider`继承自`QAbstractSlider`，它的绝大多数属性都是从`QAbstractSlider`继承而来的。
+
+`QSlider`有很多属性，完整的可查看帮助文档。这里仅列出常用的属性和方法。
+
+### 值
+
+滑动条和值相关的属性包括：当前值、最大值、最小值。
+```c++
+// 获取和设置当前值
+int value() const;
+void setValue(int);
+
+// 获取和设置最大值
+int maximum() const;
+void setMaximum(int);
+
+// 获取和设置最小值
+int minimum() const;
+void setMinimum(int);
+
+// 一次设置最大值和最小值
+void setRange(int min, int max)
+```
+
+### 方向
+
+`Qt`中滑动条有水平滑动条和垂直滑动条之分，只需修改`QSlider`的`orientation`属性，就可以滑动条的外观即可变为水平或者垂直的
+```c++
+// 获取和设置滑动条的方向
+Qt::Orientation orientation() const;
+void setOrientation(Qt::Orientation);
+```
+
+### 步长
+
+步长是指滑动条一次增加或减少的值，包括两个步长：
+
+- `singleStep`：是指按键盘的左右箭头（←/→）时的步长
+- `pageStep`：是指点击滑块两侧时的步长
+
+```c++
+// 获取和设置singleStep
+int singleStep() const;
+void setSingleStep(int);
+
+// 获取和设置pageStep
+int pageStep() const;
+void setPageStep(int);
+```
+
+### 信号槽
+
+```c++
+// 当滑块被按下时发射该信号
+void sliderPressed();
+
+// 当滑块移动时发射该信号
+void sliderMoved(int value);
+
+// 当滑块释放时发射该信号
+void sliderReleased();
+
+// 当滑动条的值改变时，发射该信号
+void valueChanged(int value);
+```
+
+
+## 案例
+
+三个滑动条，分别用来调节 RGB 三个颜色的值，并显示到左侧各自的文本框中，并且将 RGB 这三个颜色的组合，设置为上面的文本框的背景颜色
+
+**效果**
+
+![Img](./FILES/README.md/img-20231221085558.png)
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-07 10:39
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+
+private slots:
+    void hsRedChanged(int value);
+    void hsGreenChanged(int value);
+    void hsBlueChanged(int value);
+    void leRedResultChanged(const QString &arg1);
+    void leGreenResultChanged(const QString &arg1);
+    void leBlueResultChanged(const QString &arg1);
+
+private:
+    Ui::Widget *ui;
+};
+#endif // WIDGET_H
+```
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+#include "qdebug.h"
+#include "qvalidator.h"
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-07 10:39
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+    this->setWindowTitle("QSlider滑动条控件");
+
+    // 初始化红色滑动条
+    ui->hsRed->setMinimum(0);
+    ui->hsRed->setMaximum(255);
+    // ui->hsRed->setRange(0, 255);
+
+
+    ui->hsRed->setSingleStep(1);
+    ui->hsRed->setPageStep(10);
+
+    ui->hsRed->setOrientation(Qt::Horizontal);
+
+    // 初始化绿色滑动条
+    ui->hsGreen->setMinimum(0);
+    ui->hsGreen->setMaximum(255);
+    // ui->hsGreen->setRange(0, 255);
+
+    ui->hsGreen->setSingleStep(5);
+    ui->hsGreen->setPageStep(20);
+
+    ui->hsGreen->setOrientation(Qt::Horizontal);
+
+    // 初始化蓝色滑动条
+    ui->hsBlue->setMinimum(0);
+    ui->hsBlue->setMaximum(255);
+    // ui->hsBlue->setRange(0, 255);
+
+    ui->hsBlue->setSingleStep(10);
+    ui->hsBlue->setPageStep(50);
+
+    ui->hsBlue->setOrientation(Qt::Horizontal);
+
+    // 初始化文本框的显示和背景色
+    QString red = QString::number(ui->hsRed->value());
+    QString green = QString::number(ui->hsGreen->value());
+    QString blue = QString::number(ui->hsBlue->value());
+    ui->leRedResult->setText(red);
+    ui->leGreenResult->setText(green);
+    ui->leBlueResult->setText(blue);
+
+    QString style = "background-color: rgb(" + red + "," +  green + ","  + blue + ");";
+    ui->leResult->setStyleSheet(style);
+    ui->leResult->setEnabled(false);
+
+
+    // 连接滑动条控件
+    connect(ui->hsRed, &QSlider::sliderMoved, this, &Widget::hsRedChanged);
+    connect(ui->hsGreen, &QSlider::sliderMoved, this, &Widget::hsGreenChanged);
+    connect(ui->hsBlue, &QSlider::sliderMoved, this, &Widget::hsBlueChanged);
+
+
+    // 输入框，只能是整数，且限制最小最大值
+    ui->leRedResult->setValidator(new QIntValidator(this));
+    ui->leGreenResult->setValidator(new QIntValidator(this));
+    ui->leBlueResult->setValidator(new QIntValidator(this));
+
+    // 连接输入框，直接输入一个值，更改颜色，并更改滑块
+    connect(ui->leRedResult, &QLineEdit::textChanged, this, &Widget::leRedResultChanged);
+    connect(ui->leGreenResult, &QLineEdit::textChanged, this, &Widget::leGreenResultChanged);
+    connect(ui->leBlueResult, &QLineEdit::textChanged, this, &Widget::leBlueResultChanged);
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+
+void Widget::hsRedChanged(int value) {
+    // 获取rgb的值
+    //QString redNumber = QString::number(ui->hsRed->value());
+    QString redNumber = QString::number(value);
+    QString greenNumber = QString::number(ui->hsGreen->value());
+    QString blueNumber = QString::number(ui->hsBlue->value());
+
+    // 显示右侧文本框
+    ui->leRedResult->setText(redNumber);
+
+    // 颜色结果
+    QString style = "background-color: rgb(" + redNumber + "," +  greenNumber + ","  + blueNumber + ");";
+    qDebug() << style;
+    ui->leResult->setStyleSheet(style);
+}
+
+void Widget::hsGreenChanged(int value) {
+    // 获取rgb的值
+    QString redNumber = QString::number(ui->hsRed->value());
+    QString greenNumber = QString::number(value);
+    QString blueNumber = QString::number(ui->hsBlue->value());
+
+    // 显示右侧文本框
+    ui->leGreenResult->setText(greenNumber);
+
+    // 颜色结果
+    QString style = "background-color: rgb(" + redNumber + "," +  greenNumber + ","  + blueNumber + ");";
+    qDebug() << style;
+    ui->leResult->setStyleSheet(style);
+}
+
+void Widget::hsBlueChanged(int value) {
+    // 获取rgb的值
+    QString redNumber = QString::number(ui->hsRed->value());
+    QString greenNumber = QString::number(ui->hsGreen->value());
+    QString blueNumber = QString::number(value);
+
+    // 显示右侧文本框
+    ui->leBlueResult->setText(blueNumber);
+
+    // 颜色结果
+    QString style = "background-color: rgb(" + redNumber + "," +  greenNumber + ","  + blueNumber + ");";
+    qDebug() << style;
+    ui->leResult->setStyleSheet(style);
+}
+
+void Widget::leRedResultChanged(const QString &arg1) {
+    int value = arg1.toInt();
+    ui->hsRed->setValue(value);
+    hsRedChanged(value);
+}
+
+void Widget::leGreenResultChanged(const QString &arg1) {
+    int value = arg1.toInt();
+    ui->hsGreen->setValue(value);
+    hsGreenChanged(value);
+}
+
+void Widget::leBlueResultChanged(const QString &arg1) {
+    int value = arg1.toInt();
+    ui->hsBlue->setValue(value);
+    hsBlueChanged(value);
+}
+```
+
+
+
+<br><br><br>
+
+# a13_QProgressBar
+
+## 学习内容
+
+`QProgressBar`是进度条控件，进度条用来指示任务的完成情况。
+
+
+## 属性和方法
+
+### 值
+
+进度条和值相关的属性包括：当前值、最大值、最小值
+```c++
+// 获取和设置当前值
+int value() const;
+void setValue(int);
+
+// 获取和设置最大值
+int maximum() const;
+void setMaximum(int);
+
+// 获取和设置最小值
+int minimum() const;
+void setMinimum(int);
+
+// 一次设置最大值和最小值
+void setRange(int min, int max)
+    
+// 复位当前值    
+void QProgressBar::reset()
+```
+
+
+### 方向
+
+`Qt`中进度条有水平进度条和垂直进度条之分，只需修改`QProgressBar`的 `orientation`属性，就可以将进度条的外观变为水平或者垂直的
+
+```c++
+// 获取和设置滑动条的方向
+Qt::Orientation orientation() const
+void setOrientation(Qt::Orientation)
+```
+
+其中，Qt::Orientation 是一个枚举类型，有两种取值：
+
+- `Qt::Horizontal`：水平
+- `Qt::Vertical`：垂直
+
+
+### 外观
+
+可以设置进度条的文本是否显示
+
+```c++
+// 获取和设置进度条的文本是否显示
+bool isTextVisible() const
+void setTextVisible(bool visible)
+```
+
+设置文本的显示位置
+
+```c++
+Qt::Alignment alignment() const
+void setAlignment(Qt::Alignment alignment)
+```
+
+文本的显示格式，也就是进度条显示的进度值的方式
+
+```c++
+// 获取格式
+QString format() const;
+
+// 设置格式
+void setFormat(const QString &format);
+
+// 复位格式
+void resetFormat()
+```
+
+格式有三种：
+- `%p`：百分比
+- `%v`：当前值
+- `%m`：最大值
+
+还可以设置进度条的进度增长方向
+
+```c++
+// 获取和设置是否外观反转
+bool invertedAppearance() const
+void setInvertedAppearance(bool invert)
+```
+
+通常，进度条进度的增长方向从左到右，而外观反转，将进度条的进度增长方向修改为从右向左。
+
+
+### 信号槽
+
+```c++
+// 当进度条的值改变时，发射该信号
+void valueChanged(int value)
+```
+
+
+
+
+## 案例
+
+三个不同样式的进度条使用：文件下载、文件拷贝、网络请求
+
+**效果**
+
+![Img](./FILES/README.md/img-20231221092834.png)
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+#include "QTimer"
+#include "QMessageBox"
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-07 14:22
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+
+private slots:
+    void btnFileDownload();
+    void btnFileCopy();
+    void onFileDownloadTimeout();
+    void onFileCopyTimeout();
+
+
+private:
+    Ui::Widget *ui;
+
+    QTimer *mTimerFileDownload;
+    QTimer *mTimerFileCopy;
+
+};
+#endif // WIDGET_H
+```
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-07 14:22
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+    this->setWindowTitle("QProgressBar进度条控件");
+
+    // 1.下载
+    ui->pgbFileDownload->setMinimum(0);
+    ui->pgbFileDownload->setMaximum(100);
+    // ui->pbDownload->setRange(0, 100);
+
+    ui->pgbFileDownload->setValue(0);
+
+    // 设置文本的显示位置
+    ui->pgbFileDownload->setAlignment(Qt::AlignRight);
+    // 设置是否显示文本
+    // ui->pbDownload->setTextVisible(false);
+
+    mTimerFileDownload = new QTimer();
+    mTimerFileDownload->setInterval(10);
+
+    connect(ui->btnFileDownload, &QPushButton::clicked, this, &Widget::btnFileDownload);
+    connect(mTimerFileDownload, &QTimer::timeout, this, &Widget::onFileDownloadTimeout);
+
+    // 2.拷贝
+    ui->pgbFileCopy->setMinimum(0);
+    ui->pgbFileCopy->setMaximum(1000);
+    // ui->pbCopy->setRange(0, 1000);
+
+    ui->pgbFileCopy->setValue(0);
+
+    // 设置文本的显示位置
+    ui->pgbFileCopy->setAlignment(Qt::AlignCenter);
+    // 显示格式
+    ui->pgbFileCopy->setFormat("%v/%m");
+
+    mTimerFileCopy = new QTimer();
+    mTimerFileCopy->setInterval(5);
+
+    connect(ui->btnFileCopy, &QPushButton::clicked, this, &Widget::btnFileCopy);
+    connect(mTimerFileCopy, &QTimer::timeout, this, &Widget::onFileCopyTimeout);
+
+
+    // 3、网络
+    ui->pgbNetwork->setMinimum(0);
+    ui->pgbNetwork->setMaximum(0);
+
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+
+void Widget::btnFileDownload() {
+    ui->pgbFileDownload->reset();
+    // 启动定时器
+    mTimerFileDownload->start();
+}
+
+void Widget::btnFileCopy() {
+    ui->pgbFileCopy->reset();
+    // 启动定时器
+    mTimerFileCopy->start();
+}
+
+void Widget::onFileDownloadTimeout() {
+    int currentValue = ui->pgbFileDownload->value();
+
+    if(currentValue >= ui->pgbFileDownload->maximum()) {
+        mTimerFileDownload->stop();
+        QMessageBox::information(this, "提示", "文件下载完成！");
+    } else {
+        ui->pgbFileDownload->setValue(ui->pgbFileDownload->value() + 1);
+        qDebug() << ui->pgbFileDownload->value();
+    }
+}
+
+void Widget::onFileCopyTimeout() {
+    int currentValue = ui->pgbFileCopy->value();
+
+    if(currentValue >= ui->pgbFileCopy->maximum()) {
+        mTimerFileCopy->stop();
+        QMessageBox::information(this, "提示", "文件拷贝完成！");
+    } else {
+        ui->pgbFileCopy->setValue(ui->pgbFileCopy->value() + 1);
+        qDebug() << ui->pgbFileCopy->value();
+    }
+}
+```
+
+
+
+<br><br><br>
+
+# a14_QListWidget
+
+## 学习内容
+
+`Qt`中的列表框控件，对应的类是`QListWidget`，它用于显示多个列表项，列表项对应的类是`QListWidgetItem`。
+
+
+## 属性和方法
+
+### 显示模式
+
+列表框控件，支持两种显示模式：列表模式和图标模式
+
+```c++
+// 获取和设置显示模式
+QListView::ViewMode viewMode() const
+void setViewMode(QListView::ViewMode mode)
+```
+
+其中，`QListView::ViewMode`是一个枚举，有两个取值：
+
+- `QListView::ListMode`：列表模式
+- `QListView::IconMode`：图标模式
+
+该属性既可以在属性窗口中设置，也可以在代码中动态设置
+
+
+### 交替背景色
+
+设置相邻行交替显示不同的背景色，便于显示和浏览时的定位
+
+```c++
+// 获取和设置交替显示
+bool alternatingRowColors() const
+void setAlternatingRowColors(bool enable)
+```
+
+### 添加条目
+
+```c++
+// 在尾部添加
+void addItem(const QString &label)
+void addItem(QListWidgetItem *item)
+void addItems(const QStringList &labels)
+
+// 在指定行之前添加
+void insertItem(int row, QListWidgetItem *item)
+void insertItem(int row, const QString &label)
+void insertItems(int row, const QStringList &labels)
+```
+
+使用包含 QListWidgetItem 参数的函数，可以为条目指定图标
+```c++
+QListWidgetItem::QListWidgetItem(const QIcon &icon, const QString &text, QListWidget *parent = nullptr, int type = Type)  
+```
+
+### 删除条目
+
+```c++
+// 方法一
+QListWidgetItem* item = ui->lwProvince->currentItem();
+ui->lwProvince->removeItemWidget(item);
+delete item;
+
+// 方法二
+int row = ui->lwProvince->currentRow();
+QListWidgetItem* item = ui->lwProvince->takeItem(row);
+delete item;
+```
+
+**注意：需要手动 delete 掉条目**
+
+
+### 信号槽
+
+列表控件的信号和槽有很多，在帮助文档中搜索。
+
+```c++
+// 当条目被单击时，发射该信号
+void itemClicked(QListWidgetItem *item);
+
+// 当条目被双击时，发射该信号
+void itemDoubleClicked(QListWidgetItem *item);
+```
+
+
+
+## 案例
+
+**效果**
+
+列表模式
+
+![Img](./FILES/README.md/img-20231221093517.png)
+
+图标模式
+
+![Img](./FILES/README.md/img-20231221093535.png)
+
+
+`widget.h` 头文件
+```c++
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+#include <QListWidgetItem>
+#include <QButtonGroup>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-08 08:27
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Widget;
+}
+QT_END_NAMESPACE
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Widget(QWidget *parent = nullptr);
+    ~Widget();
+private slots:
+    void rbModeClicked();
+    void onItemClicked(QListWidgetItem *item);
+    void onItemDoubleClicked(QListWidgetItem *item);
+    void onBtnAddClicked();
+    void onBtnInsertClicked();
+    void onBtnDeleteClicked();
+private:
+    Ui::Widget *ui;
+
+    QButtonGroup * operateButtonGroup;
+};
+#endif // WIDGET_H
+```
+
+`widget.cpp` 源文件
+```c++
+#include "widget.h"
+#include "ui_widget.h"
+
+#include "QDebug"
+#include "QRandomGenerator"
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2023-12-08 08:27
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+QStringList iconStringList = {
+    ":/FILES/chijing.png",
+    ":/FILES/ku.png",
+    ":/FILES/nu.png",
+    ":/FILES/xiao.png",
+    ":/FILES/zhayan.png"
+};
+
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::Widget) {
+    ui->setupUi(this);
+    this->setWindowTitle("列表框控件QListWidget");
+
+    // 添加默认条目
+    QListWidgetItem *item1 = new QListWidgetItem();
+    item1->setText("广东省");
+    item1->setIcon(QIcon(":/FILES/chijing.png"));
+    ui->lwProvince->addItem(item1);
+
+    QListWidgetItem *item2 = new QListWidgetItem();
+    item2->setText("河南省");
+    item2->setIcon(QIcon(":/FILES/xiao.png"));
+    ui->lwProvince->addItem(item2);
+
+    QListWidgetItem *item3 = new QListWidgetItem();
+    item3->setText("山东省");
+    item3->setIcon(QIcon(":/FILES/zhayan.png"));
+    ui->lwProvince->addItem(item3);
+
+    // 默认是列表模式
+    operateButtonGroup = new QButtonGroup(this);
+    operateButtonGroup->addButton(ui->rbListMode, 0);
+    operateButtonGroup->addButton(ui->rbIconMode, 1);
+    ui->rbListMode->setChecked(true);
+    ui->lwProvince->setViewMode(QListView::ListMode);
+    connect(ui->rbListMode, &QRadioButton::clicked, this, &Widget::rbModeClicked);
+    connect(ui->rbIconMode, &QRadioButton::clicked, this, &Widget::rbModeClicked);
+
+    // 条目单击和双击的信号槽
+    connect(ui->lwProvince, &QListWidget::itemClicked, this, &Widget::onItemClicked);
+    connect(ui->lwProvince, &QListWidget::itemDoubleClicked, this, &Widget::onItemDoubleClicked);
+
+    // add/insert/delete
+    connect(ui->btnAdd, &QPushButton::clicked, this, &Widget::onBtnAddClicked);
+    connect(ui->btnInsert, &QPushButton::clicked, this, &Widget::onBtnInsertClicked);
+    connect(ui->btnDelete, &QPushButton::clicked, this, &Widget::onBtnDeleteClicked);
+
+}
+
+Widget::~Widget() {
+    delete ui;
+}
+
+// 单选按钮，选择显示模式
+void Widget::rbModeClicked() {
+    int localCheckedId = operateButtonGroup->checkedId();
+    if (localCheckedId == 0) {
+        //列表模式
+        ui->lwProvince->setViewMode(QListView::ListMode);
+        // 条目间距
+        ui->lwProvince->setSpacing(2);
+    } else if (localCheckedId == 1) {
+        //图标模式
+        ui->lwProvince->setViewMode(QListView::IconMode);
+        // 条目间距
+        ui->lwProvince->setSpacing(10);
+    } else {
+        qDebug() << "无效模式选择";
+
+    }
+
+}
+// 单击 选中
+void Widget::onItemClicked(QListWidgetItem *item) {
+    ui->leCurrentItem->setText(item->text());
+}
+
+// 双击 可编辑
+void Widget::onItemDoubleClicked(QListWidgetItem *item) {
+    item->setFlags(Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+}
+
+// 添加
+void Widget::onBtnAddClicked() {
+    // 获取 0-4 随机数
+    int iconIndex = QRandomGenerator::global()->generate() % 5;
+
+    QIcon icon(iconStringList[iconIndex]);
+    QString text = ui->leInput->text();
+    if(text.isEmpty()) {
+        qDebug() << "添加内容不能为空";
+    }
+    QListWidgetItem *item = new QListWidgetItem(icon, text);
+
+    ui->lwProvince->addItem(item);
+}
+
+// 插入
+void Widget::onBtnInsertClicked() {
+    // 获取 0-4 随机数
+    int iconIndex = QRandomGenerator::global()->generate() % 5;
+
+    QIcon icon(iconStringList[iconIndex]);
+    QString text = ui->leInput->text();
+    if(text.isEmpty()) {
+        qDebug() << "插入内容不能为空";
+    }
+    QListWidgetItem *item = new QListWidgetItem(icon, text);
+
+    // 获取当前选中的行
+    int localCurrentRow = ui->lwProvince->currentRow();
+
+    ui->lwProvince->insertItem(localCurrentRow, item);
+}
+
+void Widget::onBtnDeleteClicked() {
+#if 0
+    // 方法一
+    QListWidgetItem* item = ui->lwProvince->currentItem();
+    ui->lwProvince->removeItemWidget(item);
+    delete item;
+#else
+    // 方法二
+    int row = ui->lwProvince->currentRow();
+    QListWidgetItem* item = ui->lwProvince->takeItem(row);
+    delete item;
+#endif
+}
+```
+
+
+
+<br><br><br>
 
 
 
