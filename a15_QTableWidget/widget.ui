@@ -18,7 +18,7 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QTableWidget" name="tableWidget">
+  <widget class="QTableWidget" name="twStudent">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -40,7 +40,7 @@
    <property name="title">
     <string>数据操作</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -60,7 +60,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="leName"/>
        </item>
       </layout>
      </item>
@@ -74,7 +74,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="leGender"/>
        </item>
       </layout>
      </item>
@@ -88,7 +88,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_3"/>
+        <widget class="QLineEdit" name="leAge"/>
        </item>
       </layout>
      </item>
@@ -102,35 +102,35 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_4"/>
+        <widget class="QLineEdit" name="leProvince"/>
        </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btnAppend">
          <property name="text">
           <string>添加一行</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="btnInsert">
          <property name="text">
           <string>插入一行</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QPushButton" name="btnModify">
          <property name="text">
           <string>修改当前行</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="btnDelete">
          <property name="text">
           <string>删除当前行</string>
          </property>
@@ -141,7 +141,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -156,7 +156,7 @@
       <property name="title">
        <string>外观设置</string>
       </property>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="cboHHeader">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -169,7 +169,7 @@
         <string>行表头</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QCheckBox" name="cboVHeader">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -182,7 +182,7 @@
         <string>列表头</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_3">
+      <widget class="QCheckBox" name="cboAltemate">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -195,7 +195,7 @@
         <string>交替背景色</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_4">
+      <widget class="QCheckBox" name="cboEditCell">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -208,13 +208,13 @@
         <string>单元格可编辑</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_5">
+      <widget class="QPushButton" name="btnStyleSheet">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>160</y>
-         <width>121</width>
-         <height>21</height>
+         <width>141</width>
+         <height>23</height>
         </rect>
        </property>
        <property name="text">
@@ -228,7 +228,7 @@
       <property name="title">
        <string>选择设置</string>
       </property>
-      <widget class="QRadioButton" name="radioButton">
+      <widget class="QRadioButton" name="rbCell">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -241,7 +241,7 @@
         <string>选择单元格</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="radioButton_2">
+      <widget class="QRadioButton" name="rbRow">
        <property name="geometry">
         <rect>
          <x>10</x>

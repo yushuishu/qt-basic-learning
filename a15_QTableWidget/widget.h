@@ -27,7 +27,7 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-
+    void appendOneRow(QString name, QString gender, int age, QString province);
 private:
     Ui::Widget *ui;
 };
