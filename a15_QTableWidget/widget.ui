@@ -182,7 +182,7 @@
         <string>列表头</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="cboAltemate">
+      <widget class="QCheckBox" name="cboAlternate">
        <property name="geometry">
         <rect>
          <x>10</x>
