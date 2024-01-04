@@ -9,7 +9,7 @@
  * @IDE ：Qt Creator
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：
+ * @Description ：QTableWidget 是 Qt 中的表格控件，可以行列的形式来展示数据
  * <p></p>
  */
 

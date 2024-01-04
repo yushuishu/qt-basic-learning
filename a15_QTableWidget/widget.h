@@ -2,7 +2,8 @@
 #define WIDGET_H
 
 #include <QWidget>
-
+#include <QButtonGroup>
+#include <QTableWidgetItem>
 
 /**
  * @Author ：谁书-ss
@@ -30,5 +31,15 @@ public:
     void appendOneRow(QString name, QString gender, int age, QString province);
 private:
     Ui::Widget *ui;
+    QButtonGroup *mButtonGroupSelection;
+private slots:
+    void btnStyleSheetClicked();
+    void onSelectionRadioButtonClicked();
+    void onItemClicked(QTableWidgetItem *item);
+    void insertOneRow(int row, QString name, QString gender, int age, QString province);
+    void btnAppendClicked();
+    void btnInsertClicked();
+    void btnDeleteClicked();
+    void btnModifyClicked();
 };
 #endif // WIDGET_H
