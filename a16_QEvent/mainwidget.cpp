@@ -4,6 +4,15 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 
+#include "enter_leave_widget.h"
+#include "press_move_release_widget.h"
+#include "key_widget.h"
+#include "timer_widget.h"
+#include "drag_widget.h"
+#include "paint_widget.h"
+#include "context_widget.h"
+#include "propagate_widget.h"
+
 
 /**
  * @Author ：谁书-ss
@@ -46,6 +55,7 @@ MainWidget::MainWidget(QWidget *parent)
 
 
     initNav();
+    initMain();
 }
 
 void MainWidget::initNav()
@@ -83,7 +93,30 @@ void MainWidget::initNav()
         btnGroup->addButton(btn, i);
         //将按钮加入到布局
         navWidget->layout()->addWidget(btn);
+        // 关联信号槽
+        connect(btn, &QPushButton::clicked, this, &MainWidget::btnClicked);
+        // 默认选中第一项
+        btnGroup->button(0)->click();
     }
+}
+
+void MainWidget::initMain()
+{
+    // 逐个添加子窗体
+    stackedWidget->addWidget(new EnterLeaveWidget());
+    stackedWidget->addWidget(new PressMoveReleaseWidget());
+    stackedWidget->addWidget(new KeyWidget());
+    stackedWidget->addWidget(new TimerWidget());
+    stackedWidget->addWidget(new DragWidget());
+    stackedWidget->addWidget(new PaintWidget());
+    stackedWidget->addWidget(new ContextWidget());
+    stackedWidget->addWidget(new PropagateWidget());
+}
+
+void MainWidget::btnClicked()
+{
+    int index = btnGroup->checkedId();
+    stackedWidget->setCurrentIndex(index);
 }
 
 MainWidget::~MainWidget() {}

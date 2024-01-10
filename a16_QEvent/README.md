@@ -268,4 +268,129 @@ EnterLeaveWidget::EnterLeaveWidget(QWidget *parent)
 
 #### 关联槽函数
 
+首先，在 mainwidget.h 中，声明左侧导航按钮的槽函数：
 
+```c++
+class MainWidget : public QWidget
+{
+private slots:
+    void buttonClicked();  //导航按钮单击事件
+};
+```
+
+并在 mainwidget.cpp 中 实现该槽函数，如下：
+
+```c++
+void MainWidget::buttonClicked()
+{
+    // 识别按下了哪个按钮
+    int index = btnGroup->checkedId();
+    stackedWidget->setCurrentIndex(index);
+}
+```
+
+然后，需要在 initNav() 函数中，关联一下信号槽，如下：
+
+```c++
+void MainWidget::initNav()
+{
+    for ( int i = 0; i < names.count(); i++ ) {
+        
+        // ...
+        
+        // 关联信号槽
+        connect(btn, &QPushButton::clicked, this, &MainWidget::btnClicked);
+    }
+}
+```
+
+最后，为了默认选中第一项，在 initNav() 最后添加如下一行：
+
+```c++
+void MainWidget::initNav()
+{
+ 	// ...
+    
+    // 默认选中第一项
+    btnGroup->button(0)->click();
+}
+```
+
+此时，运行，就可以左右联动了，如下：
+
+![Img](./FILES/README.md/img-20240110081446.png)
+
+
+<br><br>
+
+## 鼠标进入、离开事件
+
+`QEvent::Enter`：鼠标进入事件，当鼠标进入到窗口/控件内部时，触发该事件
+
+`QEvent::Leave`：鼠标离开事件，当鼠标进入到窗口/控件内部时，触发该事件
+
+
+<br><br>
+
+### 通过自定义控件实现
+
+#### 添加自定义控件类 LabelX
+
+首先，在左侧项目文件名上右键，然后选择 “添加新文件”，选择 “C++ Class”，如下：
+
+
+
+
+
+<br><br>
+
+### 通过事件过滤器实现
+
+
+
+
+
+
+<br><br>
+
+## 鼠标按下、移动、释放事件
+
+
+<br><br>
+
+## 键盘事件
+
+
+
+
+<br><br>
+
+## 定时器事件
+
+
+
+
+<br><br>
+
+## 拖动事件
+
+
+
+
+<br><br>
+
+## 绘图事件
+
+
+
+
+<br><br>
+
+## 右键菜单
+
+
+
+
+<br><br>
+
+## 总结：事件的传递流程

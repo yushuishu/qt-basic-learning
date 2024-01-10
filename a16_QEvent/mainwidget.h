@@ -30,6 +30,11 @@ private:
 
     void initNav();
     QButtonGroup* btnGroup;
+
+    void initMain();
+
+private slots:
+    void btnClicked();
 };
 
 #endif // MAINWIDGET_H
