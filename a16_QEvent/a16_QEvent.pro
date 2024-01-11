@@ -13,6 +13,7 @@ SOURCES += \
     drag_widget.cpp \
     enter_leave_widget.cpp \
     key_widget.cpp \
+    labelx.cpp \
     main.cpp \
     mainwidget.cpp \
     paint_widget.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     drag_widget.h \
     enter_leave_widget.h \
     key_widget.h \
+    labelx.h \
     mainwidget.h \
     paint_widget.h \
     press_move_release_widget.h \

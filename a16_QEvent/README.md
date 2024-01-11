@@ -1,4 +1,4 @@
-# a15_QEvent
+# a16_QEvent
 
 事件，在 Qt 中是很重要的一块内容，在实际工作中用到的也很多。
 
@@ -338,16 +338,255 @@ void MainWidget::initNav()
 
 首先，在左侧项目文件名上右键，然后选择 “添加新文件”，选择 “C++ Class”，如下：
 
+![Img](./FILES/README.md/img-20240111221625.png)
+
+新建类文件信息如下：
+
+![Img](./FILES/README.md/img-20240111221813.png)
+
+然后，把父类修改为`QLabel`，来到`labelx.h`将父类由`QWidget`修改为`QLabel`，如下：
+```c++
+#ifndef LABELX_H
+#define LABELX_H
+
+#include <QLabel>
 
 
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-11 22:18
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+
+class LabelX : public QLabel
+{
+    Q_OBJECT
+public:
+    explicit LabelX(QWidget *parent = nullptr);
+
+signals:
+};
+
+#endif // LABELX_H
+```
+
+来到`labelx.cpp`将父类由`QWidget`修改为`QLabel`，如下：
+
+```c++
+#include "labelx.h"
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-11 22:18
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+LabelX::LabelX(QWidget *parent)
+    : QLabel{parent}
+{}
+```
+
+
+<br><br>
+
+#### 重写 enterEvent/leaveEvent
+
+首先，来到 `labelx.h`，声明这两个函数：
+
+```c++
+class LabelX : public QLabel
+{
+protected:
+    // 鼠标进入/离开事件
+    void enterEvent(QEnterEvent* enterEvent);
+    void leaveEvent(QEvent* event);
+};
+```
+
+然后，来到 `labelx.cpp` 实现这两个函数：
+
+```c++
+static int cnt = 1;
+
+void LabelX::enterEvent(QEnterEvent* enterEvent)
+{
+    Q_UNUSED(enterEvent)
+    //qDebug() << "enterEvent: " << cnt++;
+    this->setText(QString("enterEvent: %1").arg(cnt++));
+}
+
+void LabelX::leaveEvent(QEvent* event)
+{
+    Q_UNUSED(event)
+    //qDebug() << "leaveEvent: " << cnt++;
+    this->setText(QString("leaveEvent: %1").arg(cnt++));
+}
+```
+
+可以通过 `qDebug()` 在控制台输出，不过为了更直观，直接显示到标签上；
+
+定义了一个静态变量，实现对进入和离开的计数；
+
+使用 `Q_UNUSED` 宏，可以消除 `“unused parameter”` 的警告；
+
+
+<br><br>
+
+#### 将 LabelX 显示到界面
+
+来到 `enter_leave_widget.cpp`，在构造函数中添加 `LabelX` 控件，如下：
+
+```c++
+#include "enter_leave_widget.h"
+
+#include <QLabel>
+#include <QVBoxLayout>
+
+#include <labelx.h>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:16
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：鼠标进入/离开
+ * <p></p>
+ */
+
+EnterLeaveWidget::EnterLeaveWidget(QWidget *parent)
+    : QWidget{parent}
+{
+    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // 使用自定义的标签控件LabelX
+    LabelX* lblx = new LabelX(this);
+    lblx->setText("鼠标进入/离开");
+    lblx->setFrameShape(QFrame::Box);
+    lblx->setFixedHeight(50);
+    lblx->setAlignment(Qt::AlignCenter);
+    lblx->setStyleSheet("background-color: blue;color: white;font-size: 25px");
+    verticalLayout->addWidget(lblx);
+}
+```
+
+此时运行程序，每当鼠标进入和离开标签时，计数都会加1，如下：
+
+![Img](./FILES/README.md/img-20240111224719.png)
 
 
 <br><br>
 
 ### 通过事件过滤器实现
 
+#### 添加一个 QLabel
+
+首先，在 `enter_leave_widget.h` 文件中添加一个 `QLabel` 的成员变量，如下：
+
+```c++
+#include <QLabel>
+
+class EnterLeaveWidget : public QWidget
+{
+private:
+    QLabel* lbl;
+};
+```
+
+然后，在 `enter_leave_widget.cpp` 的构造中，添加一个 `QLabel` 控件，如下：
+
+```c++
+EnterLeaveWidget::EnterLeaveWidget(QWidget* parent) : QWidget{parent}
+{
+    // 2. 添加一个标准的QLabel
+    lbl = new QLabel(this);
+    lbl->setText("");
+    lbl->setFrameShape(QFrame::Box);
+    lbl->setFixedHeight(50);
+    lbl->setAlignment(Qt::AlignCenter);
+    lbl->setStyleSheet("background-color: red;color: white;font-size: 25px");
+    verticalLayout->addWidget(lbl);
+}
+```
 
 
+<br><br>
+
+#### 为 QLabel 安装事件过滤器
+
+在 `enter_leave_widget.cpp` 的构造中，为 `QLabel` 控件安装事件过滤器，如下：
+
+```c++
+EnterLeaveWidget::EnterLeaveWidget(QWidget* parent) : QWidget{parent}
+{
+    // ...
+    lbl->installEventFilter(this);
+}
+```
+
+这里将 lbl 的事件过滤器指定为 `this`，那么所有的发给 `lbl` 的事件都会被当前窗口截获。
+
+
+<br><br>
+
+#### 重写 eventFilter() 函数
+
+重写当前窗口的 `eventFilter()` 函数，首先，在 `enter_leave_widget.h`文件中声明该函数，如下：
+
+```c++
+class EnterLeaveWidget : public QWidget
+{
+protected:
+    bool eventFilter(QObject* watched, QEvent* event);
+};
+```
+
+然后，在 `enter_leave_widget.cpp` 文件中实现该函数，如下：
+
+```c++
+#include <QEvent>
+
+static int cnt = 1;
+// 查看帮助文档， 拷贝
+bool EnterLeaveWidget::eventFilter(QObject* watched, QEvent* event)
+{
+    if ( watched == lbl ) {
+        if ( event->type() == QEvent::Enter ) {
+            lbl->setText(QString("enterEvent: %1").arg(cnt++));
+        } else if ( event->type() == QEvent::Leave ) {
+            lbl->setText(QString("leaveEvent: %1").arg(cnt++));
+        }
+    }
+
+    return QWidget::eventFilter(watched, event);
+}
+```
+
+注意：
+
+这里判断下事件是否是发向 `lbl` 的，然后再做处理，因为还有可能监控其他的控件；
+
+通过 `QEvent` 类的 `type()` 函数，可以判断事件的类型；
+
+以上还通过一个静态变量，来对事件计数；
+
+最后调用下父类的 `QWidget::eventFilter(watched, event)`，其他事件交由父类处理；
+
+此时运行，在当前窗口就可以截获发向 `QLabel` 的进入和离开事件了，如下：
+
+![Img](./FILES/README.md/img-20240111230309.png)
 
 
 

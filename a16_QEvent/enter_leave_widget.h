@@ -2,7 +2,7 @@
 #define ENTERLEAVEWIDGET_H
 
 #include <QWidget>
-
+#include <QLabel>
 
 /**
  * @Author ：谁书-ss
@@ -19,7 +19,10 @@ class EnterLeaveWidget : public QWidget
     Q_OBJECT
 public:
     explicit EnterLeaveWidget(QWidget *parent = nullptr);
-
+private:
+     QLabel* lbl;
+protected:
+     bool eventFilter(QObject* watched, QEvent* event);
 signals:
 };
 
