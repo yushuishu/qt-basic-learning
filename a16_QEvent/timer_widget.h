@@ -14,8 +14,7 @@
  * <p></p>
  */
 
-class TimerWidget : public QWidget
-{
+class TimerWidget : public QWidget {
     Q_OBJECT
 public:
     explicit TimerWidget(QWidget *parent = nullptr);

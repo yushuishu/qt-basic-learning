@@ -14,8 +14,7 @@
  * <p></p>
  */
 
-class PaintWidget : public QWidget
-{
+class PaintWidget : public QWidget {
     Q_OBJECT
 public:
     explicit PaintWidget(QWidget *parent = nullptr);

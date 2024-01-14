@@ -14,8 +14,7 @@
  * <p></p>
  */
 
-class KeyWidget : public QWidget
-{
+class KeyWidget : public QWidget {
     Q_OBJECT
 public:
     explicit KeyWidget(QWidget *parent = nullptr);

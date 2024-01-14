@@ -14,8 +14,7 @@
  * <p></p>
  */
 
-class PropagateWidget : public QWidget
-{
+class PropagateWidget : public QWidget {
     Q_OBJECT
 public:
     explicit PropagateWidget(QWidget *parent = nullptr);

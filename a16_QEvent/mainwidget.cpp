@@ -25,8 +25,7 @@
  */
 
 MainWidget::MainWidget(QWidget *parent)
-    : QWidget(parent)
-{
+    : QWidget(parent) {
     this->setWindowTitle("事件QEnvent");
 
     // 整体采用水平布局
@@ -58,24 +57,23 @@ MainWidget::MainWidget(QWidget *parent)
     initMain();
 }
 
-void MainWidget::initNav()
-{
+void MainWidget::initNav() {
     // 按钮文字集合
     QStringList names;
     names << "鼠标进入/离开"
-          << "鼠标按下/移动/释放"
-          << "键盘事件"
-          << "定时器事件"
-          << "拖动事件"
-          << "绘图事件"
-          << "右键菜单"
-          << "总结：事件的传递流程";
+        << "鼠标按下/移动/释放"
+        << "键盘事件"
+        << "定时器事件"
+        << "拖动事件"
+        << "绘图事件"
+        << "右键菜单"
+        << "总结：事件的传递流程";
 
     btnGroup = new QButtonGroup(this);
 
     //自动生成按钮
-    for ( int i = 0; i < names.count(); i++ ) {
-        QPushButton* btn = new QPushButton;
+    for (int i = 0; i < names.count(); i++) {
+        QPushButton *btn = new QPushButton;
         //设置按钮固定高度
         btn->setMinimumHeight(60);
         //设置按钮的文字
@@ -85,8 +83,8 @@ void MainWidget::initNav()
         // 设置按钮的样式
         navWidget->setStyleSheet(R"(
             QPushButton {
-                    font: 25px;
-                    text-align : left;
+                font: 25px;
+                text-align : left;
             }
         )");
         // 将按钮添加到 btnGroup
@@ -100,8 +98,7 @@ void MainWidget::initNav()
     }
 }
 
-void MainWidget::initMain()
-{
+void MainWidget::initMain() {
     // 逐个添加子窗体
     stackedWidget->addWidget(new EnterLeaveWidget());
     stackedWidget->addWidget(new PressMoveReleaseWidget());
@@ -113,8 +110,7 @@ void MainWidget::initMain()
     stackedWidget->addWidget(new PropagateWidget());
 }
 
-void MainWidget::btnClicked()
-{
+void MainWidget::btnClicked() {
     int index = btnGroup->checkedId();
     stackedWidget->setCurrentIndex(index);
 }

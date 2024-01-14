@@ -14,8 +14,7 @@
  * <p></p>
  */
 
-class DragWidget : public QWidget
-{
+class DragWidget : public QWidget {
     Q_OBJECT
 public:
     explicit DragWidget(QWidget *parent = nullptr);

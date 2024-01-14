@@ -14,15 +14,14 @@
  * <p></p>
  */
 
-class EnterLeaveWidget : public QWidget
-{
+class EnterLeaveWidget : public QWidget {
     Q_OBJECT
 public:
     explicit EnterLeaveWidget(QWidget *parent = nullptr);
 private:
-     QLabel* lbl;
+    QLabel *lbl;
 protected:
-     bool eventFilter(QObject* watched, QEvent* event);
+    bool eventFilter(QObject *watched, QEvent *event);
 signals:
 };
 

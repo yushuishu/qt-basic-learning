@@ -14,13 +14,12 @@
  */
 
 TimerWidget::TimerWidget(QWidget *parent)
-    : QWidget{parent}
-{
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     verticalLayout->setSpacing(0);
     verticalLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel* lbl = new QLabel(this);
+    QLabel *lbl = new QLabel(this);
     lbl->setText("定时器事件");
     lbl->setFrameShape(QFrame::Box);
     lbl->setFixedHeight(50);

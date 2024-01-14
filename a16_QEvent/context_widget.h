@@ -14,8 +14,7 @@
  * <p></p>
  */
 
-class ContextWidget : public QWidget
-{
+class ContextWidget : public QWidget {
     Q_OBJECT
 public:
     explicit ContextWidget(QWidget *parent = nullptr);

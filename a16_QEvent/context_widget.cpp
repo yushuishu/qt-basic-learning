@@ -14,13 +14,12 @@
  */
 
 ContextWidget::ContextWidget(QWidget *parent)
-    : QWidget{parent}
-{
-    QVBoxLayout* verticalLayout = new QVBoxLayout(this);
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     verticalLayout->setSpacing(0);
     verticalLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel* lbl = new QLabel(this);
+    QLabel *lbl = new QLabel(this);
     lbl->setText("右键菜单");
     lbl->setFrameShape(QFrame::Box);
     lbl->setFixedHeight(50);

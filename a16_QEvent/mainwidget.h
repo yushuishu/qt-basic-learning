@@ -16,8 +16,7 @@
  * <p></p>
  */
 
-class MainWidget : public QWidget
-{
+class MainWidget : public QWidget {
     Q_OBJECT
 
 public:
@@ -26,10 +25,10 @@ public:
 private:
     QWidget *navWidget;
     QWidget *mainWidget;
-    QStackedWidget * stackedWidget;
+    QStackedWidget *stackedWidget;
 
     void initNav();
-    QButtonGroup* btnGroup;
+    QButtonGroup *btnGroup;
 
     void initMain();
 
