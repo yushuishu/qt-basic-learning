@@ -925,7 +925,335 @@ bool PressMoveReleaseWidget::eventFilter(QObject *watched, QEvent *event) {
 
 ## 键盘事件
 
+- ==QEvent::KeyPress==：键盘按下时，触发该事件，它对应的子类是`QKeyEvent`
+- ==QEvent::KeyRelease==：键盘抬起时，触发该事件，它对应的子类是`QKeyEvent`
 
+
+<br><br>
+
+### 键盘按下、释放事件的基本使用
+
+只需重写`keyPressEvent()`和`keyPressEvent()`两个函数即可
+
+首先，在`key_widget.h`中添加两个函数的声明
+
+```c++
+#ifndef KEYWIDGET_H
+#define KEYWIDGET_H
+
+#include <QWidget>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:30
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：键盘事件
+ * <p></p>
+ */
+
+class KeyWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit KeyWidget(QWidget *parent = nullptr);
+protected:
+    // 按键按下
+    void keyPressEvent(QKeyEvent *keyEvent);
+    // 按键抬起
+    void keyReleaseEvent(QKeyEvent *keyEvent);
+signals:
+};
+
+#endif // KEYWIDGET_H
+```
+
+然后，来到 key_widget.cpp 实现这 2 个函数：
+
+```c++
+#include "key_widget.h"
+
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QKeyEvent>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:30
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：键盘事件
+ * <p></p>
+ */
+
+KeyWidget::KeyWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    QLabel *lbl = new QLabel(this);
+    lbl->setText("键盘事件");
+    lbl->setFrameShape(QFrame::Box);
+    lbl->setFixedHeight(50);
+    lbl->setAlignment(Qt::AlignCenter);
+    lbl->setStyleSheet("background-color: blue;color: white;font-size: 25px");
+    verticalLayout->addWidget(lbl);
+}
+
+void KeyWidget::keyPressEvent(QKeyEvent *keyEvent) {
+    // 普通键
+    switch (keyEvent->key() ) {
+    case Qt::Key_Return:
+        qDebug() << "Enter";
+        break;
+    case Qt::Key_Escape:
+        qDebug() << "Esc";
+        break;
+    case Qt::Key_Control:
+        qDebug() << "Ctrl";
+        break;
+    case Qt::Key_Shift:
+        qDebug() << "Shift";
+        break;
+    case Qt::Key_Alt:
+        qDebug() << "Alt";
+        break;
+    case Qt::Key_Up:
+        qDebug() << "Up";
+        break;
+    case Qt::Key_Down:
+        qDebug() << "Down";
+        break;
+    case Qt::Key_Left:
+        qDebug() << "Left";
+        break;
+    case Qt::Key_Right:
+        qDebug() << "Right";
+        break;
+    case Qt::Key_A:
+        qDebug() << "A";
+        break;
+    case Qt::Key_B:
+        qDebug() << "B";
+        break;
+    case Qt::Key_C:
+        qDebug() << "C";
+        break;
+    case Qt::Key_D:
+        qDebug() << "D";
+        break;
+    default:
+        break;
+    }
+
+    // 两键组合
+    //    qDebug() << event->modifiers(); // QFlags<Qt::KeyboardModifier>(ShiftModifier|ControlModifier)
+    // event->modifiers()，用来判读是否按下 Ctrl/Shift/Alt 键
+    if ((keyEvent->modifiers() == Qt::ControlModifier) && (keyEvent->key() == Qt::Key_A) ) {
+        qDebug() << "Ctrl + A";
+    }
+    if ((keyEvent->modifiers() == Qt::ShiftModifier) && (keyEvent->key() == Qt::Key_C) ) {
+        qDebug() << "Shift + B";
+    }
+    if ((keyEvent->modifiers() == Qt::AltModifier) && (keyEvent->key() == Qt::Key_B) ) {
+        qDebug() << "ALT + C";
+    }
+    // 三键组合Shift + Ctrl + D 的实现
+    if ((keyEvent->modifiers() == (Qt::ShiftModifier | Qt::ControlModifier)) && (keyEvent->key() == Qt::Key_D) ) {
+        qDebug() << "CTRL + Shift + D";
+    }
+}
+
+void KeyWidget::keyReleaseEvent(QKeyEvent *keyEvent) {
+    switch (keyEvent->key()) {
+    case Qt::Key_Return:
+        qDebug() << "keyReleaseEvent: Enter";
+        break;
+    case Qt::Key_Escape:
+        qDebug() << "keyReleaseEvent: Esc";
+        break;
+    case Qt::Key_Up:
+        qDebug() << "keyReleaseEvent: Up";
+        break;
+    case Qt::Key_Down:
+        qDebug() << "keyReleaseEvent: Down";
+        break;
+    case Qt::Key_Left:
+        qDebug() << "keyReleaseEvent: Left";
+        break;
+    case Qt::Key_Right:
+        qDebug() << "keyReleaseEvent: Right";
+        break;
+    case Qt::Key_A:
+        qDebug() << "keyReleaseEvent: A";
+        break;
+    case Qt::Key_B:
+        qDebug() << "keyReleaseEvent: B";
+        break;
+    case Qt::Key_C:
+        qDebug() << "keyReleaseEvent: C";
+        break;
+    case Qt::Key_D:
+        qDebug() << "keyReleaseEvent: D";
+        break;
+    case Qt::Key_Control:
+        qDebug() << "keyReleaseEvent: Ctrl";
+        break;
+    case Qt::Key_Shift:
+        qDebug() << "keyReleaseEvent: Shift";
+        break;
+    case Qt::Key_Alt:
+        qDebug() << "keyReleaseEvent: Alt";
+        break;
+    }
+}
+```
+
+说明：
+- 每个按键对应一个枚举值，比如`Qt::Key_A`代表按键`A`，`Qt::Key_Control`代表`Crtl`键，等等
+- `QKeyEvent`类的`key()`方法，可以获取当前按下的哪个按键
+- 判断`Ctrl/Shift/Alt`等控制按键，需要使用`QKeyEvent`类的`modifiers()`方法
+
+最后，还需要在构造中添加如下语句：
+
+```c++
+KeyWidget::KeyWidget(QWidget *parent)
+    : QWidget{parent} {
+    // ...
+
+    setFocusPolicy(Qt::StrongFocus);
+
+    // ...
+}
+```
+
+此时，运行程序，可以看到打印如下：
+
+![Img](./FILES/README.md/img-20240115152433.png)
+
+
+
+
+<br><br>
+
+### 键盘事件移动标签
+
+接下来，实现一个小案例：通过上下左右按键，来移动标签的位置
+
+
+<br><br>
+
+#### 界面上添加标签
+
+首先，在`key_widget.h`中添加成员变量：
+
+```c++
+#ifndef KEYWIDGET_H
+#define KEYWIDGET_H
+
+#include <QWidget>
+#include <QLabel>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:30
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：键盘事件
+ * <p></p>
+ */
+
+class KeyWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit KeyWidget(QWidget *parent = nullptr);
+private:
+    QLabel *lbl2;
+
+// ...
+
+signals:
+};
+
+#endif // KEYWIDGET_H
+```
+
+然后，在`key_widget.cpp`的构造中添加一个标签：
+
+```c++
+KeyWidget::KeyWidget(QWidget *parent)
+    : QWidget{parent} {
+    
+    // ...
+
+    lbl2 = new QLabel(this);
+    lbl2->setText("");
+    lbl2->setFrameShape(QFrame::Box);
+    lbl2->setFixedSize(100, 100);
+    lbl2->setStyleSheet("background-color: red");
+}
+```
+
+此时，运行效果如下：
+
+![Img](./FILES/README.md/img-20240115155443.png)
+
+
+<br><br>
+
+#### 移动标签
+
+只需修改上下左右按键的逻辑即可（当移动到尽头，则从另一端重新出现开始移动）：
+
+```c++
+void KeyWidget::keyPressEvent(QKeyEvent *keyEvent) {
+
+    // ...
+
+    switch (keyEvent->key() ) {
+    case Qt::Key_Up:
+        qDebug() << "Up";
+        lbl2->move(lbl2->x(), lbl2->y() - 20);
+        if (lbl2->y() + lbl2->height() <= 0 ) {
+            lbl2->move(lbl2->x(), this->height());
+        }
+        break;
+    case Qt::Key_Down:
+        qDebug() << "Down";
+        lbl2->move(lbl2->x(), lbl2->y() + 20);
+        if (lbl2->y() >= this->height() ) {
+            lbl2->move(lbl2->x(), 0);
+        }
+        break;
+    case Qt::Key_Left:
+        qDebug() << "Left";
+        lbl2->move(lbl2->x() - 20, lbl2->y());
+        if (lbl2->x() + lbl2->width() <= 0 ) {
+            lbl2->move(this->width(), lbl2->y());
+        }
+        break;
+    case Qt::Key_Right:
+        qDebug() << "Right";
+        lbl2->move(lbl2->x() + 20, lbl2->y());
+        if (lbl2->x() >= this->width() ) {
+            lbl2->move(0, lbl2->y());
+        }
+        break;
+    }
+
+    // ...
+
+}
+```
+
+此时，按键盘上的上下左右箭头，效果如下：
+
+![Img](./FILES/README.md/img-20240115160619.gif)
 
 
 <br><br>
