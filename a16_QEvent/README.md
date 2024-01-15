@@ -589,13 +589,336 @@ bool EnterLeaveWidget::eventFilter(QObject* watched, QEvent* event)
 ![Img](./FILES/README.md/img-20240111230309.png)
 
 
-
 <br><br>
 
 ## 鼠标按下、移动、释放事件
 
-### 
+### 按下、移动、释放事件的基本使用
 
+#### 鼠标按下、释放事件
+
+首先，来到 labelx.h，声明这 3 个函数：
+
+```c++
+class LabelX : public QLabel
+{
+protected:
+    void mousePressEvent(QMouseEvent *qmouseEvent);
+    void mouseReleaseEvent(QMouseEvent *qmouseEvent);
+    void mouseMoveEvent(QMouseEvent *qmouseEvent);
+};
+```
+
+然后，来到 labelx.cpp 实现这 3 个函数：
+
+```c++
+void LabelX::mousePressEvent(QMouseEvent *qmouseEvent) {
+
+    qDebug() << "mousePressEvent: " << qmouseEvent->button() << qmouseEvent->pos() << qmouseEvent->globalPosition();
+    if (qmouseEvent->button() == Qt::LeftButton) {
+        qDebug() << "左键按下: " << "x=" << qmouseEvent->position().x() << ", y=" << qmouseEvent->position().y();
+    }
+    if (qmouseEvent->button() == Qt::RightButton) {
+        qDebug() << "右键按下: " << "x=" << qmouseEvent->position().x() << ", y=" << qmouseEvent->position().y();
+    }
+}
+
+void LabelX::mouseReleaseEvent(QMouseEvent *qmouseEvent) {
+    qDebug() << "mouseReleaseEvent: " << qmouseEvent->button() << qmouseEvent->pos() << qmouseEvent->globalPosition();
+    if (qmouseEvent->button() == Qt::LeftButton) {
+        qDebug() << "左键释放: " << "x=" << qmouseEvent->position().x() << ", y=" << qmouseEvent->position().y();
+    }
+    if (qmouseEvent->button() == Qt::RightButton) {
+        qDebug() << "右键释放: " << "x=" << qmouseEvent->position().x() << ", y=" << qmouseEvent->position().y();
+    }
+}
+
+void LabelX::mouseMoveEvent(QMouseEvent *qmouseEvent) {
+    
+}
+```
+
+最后，来到 press_move_release_widget.cpp，在构造函数中添加 LabelX 控件，如下：
+
+```c++
+#include "press_move_release_widget.h"
+
+#include <QVBoxLayout>
+#include "labelx.h"
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:30
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：鼠标按下/移动/释放
+ * <p></p>
+ */
+
+PressMoveReleaseWidget::PressMoveReleaseWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // 自定义的LabelX
+    LabelX *lblx = new LabelX(this);
+    lblx->setText("鼠标按下/移动/释放");
+    lblx->setFrameShape(QFrame::Box);
+    lblx->setFixedHeight(50);
+    lblx->setAlignment(Qt::AlignCenter);
+    lblx->setStyleSheet("background-color: blue;color: white;font-size: 25px");
+    verticalLayout->addWidget(lblx);
+}
+```
+
+
+<br><br>
+
+#### 鼠标移动事件
+
+鼠标移动，与鼠标按下和释放，在判断按键时有些许不同，此时不能使用`ev->button()`，而是要使用`ev->buttons()`
+
+```c++
+void LabelX::mouseMoveEvent(QMouseEvent *qmouseEvent) {
+    qDebug() << "mouseReleaseEvent: " << qmouseEvent->button() << qmouseEvent->pos() << qmouseEvent->globalPosition();
+}
+```
+
+在移动过程中，判断有左键按下的代码，如下：
+
+```c++
+void LabelX::mouseMoveEvent(QMouseEvent *qmouseEvent) {
+    qDebug() << "mouseReleaseEvent: " << qmouseEvent->buttons() << qmouseEvent->pos() << qmouseEvent->globalPosition();
+    if (qmouseEvent->buttons() & Qt::LeftButton) {
+        qDebug() << "鼠标左键移动中：x=" << qmouseEvent->position().x() << "， y=" << qmouseEvent->position().y();
+    }
+}
+```
+
+
+<br><br>
+
+#### 鼠标跟踪
+
+以上，需要鼠标保持按下的状态下，系统才会调用 mouseMoveEvent，实际工作中往往有这么一种需求：
+
+鼠标悬浮在控件上，而不是按下，就触发 mouseMoveEvent 事件，这怎么实现呢？
+
+答案：设置鼠标跟踪，默认情况下鼠标跟踪是关闭的，需要开启
+
+首先，来到 labelx.cpp 中，设置标签使能鼠标跟踪，如下：
+
+```c++
+LabelX::LabelX(QWidget* parent) : QLabel{parent}
+{
+    this->setMouseTracking(true);
+
+    // ...
+}
+```
+
+然后，在 mouseMoveEvent 中添加打印，如下：
+
+```c++
+void LabelX::mouseMoveEvent(QMouseEvent *qmouseEvent) {
+    qDebug() << "mouseReleaseEvent: " << qmouseEvent->buttons() << qmouseEvent->pos() << qmouseEvent->globalPosition();
+    if (qmouseEvent->buttons() & Qt::LeftButton) {
+        qDebug() << "鼠标左键移动中：x=" << qmouseEvent->position().x() << "， y=" << qmouseEvent->position().y();
+    }
+}
+```
+
+![Img](./FILES/README.md/img-20240115150152.png)
+
+
+<br><br>
+
+### 鼠标事件移动标签
+
+#### 界面上添加标签
+
+首先，在`press_move_release_widget.h`中添加成员变量：
+
+```c++
+#ifndef PRESSMOVERELEASEWIDGET_H
+#define PRESSMOVERELEASEWIDGET_H
+
+#include <QWidget>
+#include <QLabel>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:30
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：鼠标按下/移动/释放
+ * <p></p>
+ */
+
+class PressMoveReleaseWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit PressMoveReleaseWidget(QWidget *parent = nullptr);
+private:
+    QLabel *lbl;
+    QWidget *widget;
+signals:
+};
+
+#endif // PRESSMOVERELEASEWIDGET_H
+```
+
+在`QLable`外边套一层`QWidget`，是为了让标签在这个`widget`范围内移动
+
+
+然后，在`press_move_release_widget.cpp`的构造中添加一个标签：
+
+```c++
+PressMoveReleaseWidget::PressMoveReleaseWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // ...
+
+    // 标准的QLabel
+    widget = new QWidget(this);
+    lbl = new QLabel(widget);
+    lbl->setText("");
+    lbl->setFrameShape(QFrame::Box);
+    lbl->setFixedSize(100, 100);
+    lbl->setStyleSheet("background-color: red");
+    verticalLayout->addWidget(widget);
+}
+```
+
+
+<br><br>
+
+#### 为QLabel安装事件过滤器
+
+```c++
+PressMoveReleaseWidget::PressMoveReleaseWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // ...
+
+    // 安装事件过滤器
+    lbl->installEventFilter(this);
+}
+```
+
+
+<br><br>
+
+#### 重写eventFilter()函数
+
+重写当前窗口的 eventFilter() 函数
+
+首先，在 press_move_release_widget.h 文件中声明该函数，
+
+同时声明记录窗口位置和鼠标按下位置的变量，如下：
+
+```c++
+#ifndef PRESSMOVERELEASEWIDGET_H
+#define PRESSMOVERELEASEWIDGET_H
+
+#include <QWidget>
+#include <QLabel>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:30
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：鼠标按下/移动/释放
+ * <p></p>
+ */
+
+class PressMoveReleaseWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit PressMoveReleaseWidget(QWidget *parent = nullptr);
+private:
+    // ...
+
+    // 鼠标按下的位置
+    QPointF localGlobalPosition;
+    // 标签的位置（左上角的点top-left）
+    QPoint wndPos;
+signals:
+};
+
+#endif // PRESSMOVERELEASEWIDGET_H
+```
+
+然后，在`press_move_release_widget.cpp`文件中实现该函数，如下：
+
+```c++
+#include <QEvent>
+#include <QMouseEvent>
+#include <QDebug>
+
+bool PressMoveReleaseWidget::eventFilter(QObject *watched, QEvent *event) {
+    if (watched != lbl) {
+        return QWidget::eventFilter(watched, event);
+    }
+
+    if (event->type() == QEvent::MouseButtonPress) {
+        qDebug() << "MouseButtonPress";
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        localGlobalPosition = mouseEvent->globalPosition();
+        wndPos = lbl->pos();
+        qDebug() << wndPos;
+    } else if (event->type() == QEvent::MouseMove) {
+        qDebug() << "MouseMove";
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+        QPointF dstPos = wndPos + (mouseEvent->globalPosition() - localGlobalPosition);
+        lbl->move(dstPos.x(), dstPos.y());
+        // 超出了最左边
+        if (lbl->pos().x() < 0) {
+            qDebug() << "超出了最左边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
+            lbl->move(0, dstPos.y());
+        }
+        // 超出了最右边
+        if (lbl->pos().x() > widget->width() - lbl->width()) {
+            qDebug() << "超出了最右边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
+            lbl->move(widget->width() - lbl->width(), dstPos.y());
+        }
+        // 超出了最上边
+        if (lbl->pos().y() < 0) {
+            qDebug() << "超出了最上边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
+            lbl->move(dstPos.x(), 0);
+        }
+        // 超出了最下边
+        if (lbl->pos().y() > widget->height() - lbl->height()) {
+            qDebug() << "超出了最下边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
+            lbl->move(dstPos.x(), widget->height() - lbl->height());
+        }
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        qDebug() << "MouseButtonRelease";
+    }
+    return false;
+}
+```
+
+这里有些实现细节，说明如下：
+
+如果不是`lbl`的事件，直接调用父类处理`return QWidget::eventFilter(watched, event)`
+在鼠标按下时，记录`lbl`的位置和鼠标按下位置，作为窗口移动时的参考
+当`lbl`超出`widget`边界时，让它等于边界值
+
+此时，就可以通过鼠标拖动标签，在 widget 范围内移动了，如下：
+
+![Img](./FILES/README.md/img-20240115150256.png)
 
 
 <br><br>

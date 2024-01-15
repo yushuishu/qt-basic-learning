@@ -63,18 +63,22 @@ bool PressMoveReleaseWidget::eventFilter(QObject *watched, QEvent *event) {
         lbl->move(dstPos.x(), dstPos.y());
         // 超出了最左边
         if (lbl->pos().x() < 0) {
+            qDebug() << "超出了最左边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
             lbl->move(0, dstPos.y());
         }
         // 超出了最右边
         if (lbl->pos().x() > widget->width() - lbl->width()) {
+            qDebug() << "超出了最右边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
             lbl->move(widget->width() - lbl->width(), dstPos.y());
         }
         // 超出了最上边
         if (lbl->pos().y() < 0) {
+            qDebug() << "超出了最上边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
             lbl->move(dstPos.x(), 0);
         }
         // 超出了最下边
         if (lbl->pos().y() > widget->height() - lbl->height()) {
+            qDebug() << "超出了最下边，x：" << lbl->pos().x() << "，y：" << dstPos.y();
             lbl->move(dstPos.x(), widget->height() - lbl->height());
         }
     } else if (event->type() == QEvent::MouseButtonRelease) {
