@@ -1260,7 +1260,539 @@ void KeyWidget::keyPressEvent(QKeyEvent *keyEvent) {
 
 ## 定时器事件
 
+QT 中使用定时器，有两种方式：
+- 定时器类：`QTimer`
+- 定时器事件：`QEvent::Timer`，对应的子类是`QTimerEvent`
 
+
+
+<br><br>
+
+### 界面布局
+
+把两个标签以及 “启动”、“停止”、“复位” 三个按钮布局在界面上。
+
+首先，来到`timer_widget.h`，声明两个标签：
+
+```c++
+#ifndef TIMERWIDGET_H
+#define TIMERWIDGET_H
+
+#include <QWidget>
+#include <QLabel>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:31
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：定时器事件
+ * <p></p>
+ */
+
+class TimerWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit TimerWidget(QWidget *parent = nullptr);
+private:
+    QLabel *lbl1;
+    QLabel *lbl2;
+signals:
+};
+
+#endif // TIMERWIDGET_H
+```
+
+然后，来到`timer_widget.cpp`，添加两个标签：
+
+```c++
+#include "timer_widget.h"
+
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QPushButton>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:31
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：定时器事件
+ * <p></p>
+ */
+
+TimerWidget::TimerWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // 1. 添加第一个QLabel
+    lbl1 = new QLabel(this);
+    lbl1->setText("");
+    lbl1->setFrameShape(QFrame::Box);
+    lbl1->setFixedSize(100, 100);
+    lbl1->setStyleSheet("background-color: red;");
+    verticalLayout->addWidget(lbl1);
+
+    // 2. 添加第二个QLabel
+    lbl2 = new QLabel(this);
+    lbl2->setText("");
+    lbl2->setFrameShape(QFrame::Box);
+    lbl2->setFixedSize(100, 100);
+    lbl2->setStyleSheet("background-color: blue;");
+    verticalLayout->addWidget(lbl2);
+
+    // 3. 添加按钮的水平布局
+    QHBoxLayout *horizontalLayout = new QHBoxLayout(this);
+    horizontalLayout->setSpacing(0);
+    horizontalLayout->setContentsMargins(0, 0, 0, 0);
+
+    QPushButton *btnStart = new QPushButton(this);
+    btnStart->setText("开始");
+    horizontalLayout->addWidget(btnStart);
+
+    QPushButton *btnStop = new QPushButton(this);
+    btnStop->setText("停止");
+    horizontalLayout->addWidget(btnStop);
+
+    QPushButton *btnReset = new QPushButton(this);
+    btnReset->setText("复位");
+    horizontalLayout->addWidget(btnReset);
+    verticalLayout->addLayout(horizontalLayout);
+
+    this->setStyleSheet(R"(
+        QPushButton {
+            font-size: 22px;
+        }
+    )");
+}
+```
+
+此时运行程序，效果如下：
+
+![Img](./FILES/README.md/img-20240116083359.png)
+
+
+<br><br>
+
+### 关联信号槽
+
+首先，来到`timer_widget.h`，声明 3 个槽函数
+
+```c++
+class TimerWidget : public QWidget
+{
+private slots:
+    void onStartClicked();
+    void onStopClicked();
+    void onResetClicked();
+};
+```
+
+然后，来到`timer_widget.cpp`，做一个空实现：
+
+```c++
+void TimerWidget::onStartClicked() {
+
+}
+
+void TimerWidget::onStopClicked() {
+
+}
+
+void TimerWidget::onResetClicked() {
+
+}
+```
+
+最后，来到`timer_widget.cpp`，在构造中连接信号槽：
+
+```c++
+TimerWidget::TimerWidget(QWidget *parent)
+    : QWidget{parent} {
+    
+    // ...
+    
+    connect(btnStart, &QPushButton::clicked, this, &TimerWidget::onStartClicked);
+    connect(btnStop, &QPushButton::clicked, this, &TimerWidget::onStopClicked);
+    connect(btnReset, &QPushButton::clicked, this, &TimerWidget::onResetClicked);
+}
+```
+
+
+<br><br>
+
+### 重写timerEvent
+
+当定时时间到，就会自动调用`timerEvent()`函数。
+
+首先，来到`timer_widget.h`中，声明`timerEvent()`函数，并声明两个定时器`id`：
+
+```c++
+class TimerWidget : public QWidget
+{
+protected:
+    void timerEvent(QTimerEvent* event);
+    
+private:
+    int id1;
+    int id2;
+};
+```
+
+然后，来到`timer_widget.cpp`中，实现`timerEvent()`函数：
+
+```c++
+void TimerWidget::timerEvent(QTimerEvent* event)
+{
+    //    qDebug() << "timerEvent";
+    if ( event->timerId() == id1 ) {
+        lbl1->move(lbl1->x() + 5, lbl1->y());
+        if ( lbl1->x() >= this->width() ) {
+            lbl1->move(0, lbl1->y());
+        }
+    } else if ( event->timerId() == id2 ) {
+        lbl2->move(lbl2->x() + 5, lbl2->y());
+        if ( lbl2->x() >= this->width() ) {
+            lbl2->move(0, lbl2->y());
+        }
+    }
+}
+```
+
+说明：
+
+- 在`timerEvent()`函数中，向右移动标签。当标签超出当前窗口，重新回到最左侧
+- 可以启动多个定时器，在`timerEvent()`中，使用`QTimerEvent`类的`timerId()`函数可以获取哪个定时器定时时间到
+
+
+<br><br>
+
+### 实现槽函数，启动定时器
+
+上一步中提到，定时时间到时，移动标签，那么就需要先启动定时器，并指定一个定时间隔。
+
+首先，在 “启动” 按钮的槽函数中，启动定时器：
+
+```c++
+void TimerEventWidget::onStartClicked()
+{
+    // 时间间隔10ms
+    id1 = startTimer(10);
+    // 时间间隔20ms
+    id2 = startTimer(20);
+}
+```
+
+然后，在 “停止” 按钮的槽函数中，停止定时器：
+
+```c++
+void TimerWidget::onStopClicked() {
+    killTimer(id1);
+    killTimer(id2);
+}
+```
+
+最后，在 “复位” 按钮的槽函数中，复位标签位置到最左侧：
+
+```c++
+void TimerWidget::onResetClicked() {
+    lbl1->move(0, lbl1->y());
+    lbl2->move(0, lbl2->y());
+}
+```
+
+此时运行，点击按钮，效果如下：
+
+![Img](./FILES/README.md/img-20240116085021.gif)
+
+
+<br><br>
+
+### 定时器类`QTimer`
+
+接下来，使用定时器类`QTimer`来实现以上同样的效果
+
+首先，在`timer_widget.h`声明两个定时器类的对象，以及定时超时的槽函数：
+
+```c++
+#include <QTimer>
+
+class TimerWidget : public QWidget {
+private slots:
+    void onTimeout1();
+    void onTimeout2();
+
+private:
+    QTimer *timer1;
+    QTimer *timer2;
+};
+```
+
+然后，在`timer_widget.cpp`中实现两个定时超时槽函数：
+
+```c++
+void TimerWidget::onTimeout1() {
+    lbl1->move(lbl1->x() + 5, lbl1->y());
+    if (lbl1->x() >= this->width()) {
+        lbl1->move(0, lbl1->y());
+    }
+}
+
+void TimerWidget::onTimeout2() {
+    lbl2->move(lbl2->x() + 5, lbl2->y());
+    if (lbl2->x() >= this->width()) {
+        lbl2->move(0, lbl2->y());
+    }
+}
+```
+
+这里移动标签，并在标签超出当前窗口边界时，复位到最左侧
+
+接着，修改 “启动”、“停止” 按钮的槽函数。
+
+为便于切换定时器类和定时器事件这两种方式，定义了一个宏：
+
+```c++
+#define USE_TIMER_EVENT
+
+void TimerWidget::onStartClicked() {
+#ifdef USE_TIMER_EVENT
+    // 时间间隔10ms
+    id1 = startTimer(10);
+    // 时间间隔20ms
+    id2 = startTimer(20);
+#else
+    timer1->start(20);
+    timer2->start(10);
+#endif
+}
+
+void TimerWidget::onStopClicked() {
+#ifdef USE_TIMER_EVENT
+    killTimer(id1);
+    killTimer(id2);
+#else
+    timer1->stop();
+    timer2->stop();
+#endif
+}
+```
+
+最后，在 timer_widget.cpp 的构造中创建定时器，并关联槽函数：
+
+```c++
+TimerWidget::TimerWidget(QWidget *parent)
+    : QWidget{parent} {
+    // ...
+    
+    timer1 = new QTimer(this);
+    connect(timer1, &QTimer::timeout, this, &TimerWidget::onTimeout1);
+
+    timer2 = new QTimer(this);
+    connect(timer2, &QTimer::timeout, this, &TimerWidget::onTimeout2);
+}
+```
+
+此时，运行效果如下：
+
+![Img](./FILES/README.md/img-20240116091019.gif)
+
+
+### 完整代码
+
+`timer_widget.h` 头文件
+```c++
+#ifndef TIMERWIDGET_H
+#define TIMERWIDGET_H
+
+#include <QWidget>
+#include <QLabel>
+#include <QTimer>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:31
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：定时器事件
+ * <p></p>
+ */
+
+class TimerWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit TimerWidget(QWidget *parent = nullptr);
+private:
+    QLabel *lbl1;
+    QLabel *lbl2;
+    int id1;
+    int id2;
+
+    QTimer *timer1;
+    QTimer *timer2;
+
+
+protected:
+    void timerEvent(QTimerEvent *event);
+
+
+private slots:
+    void onStartClicked();
+    void onStopClicked();
+    void onResetClicked();
+
+    void onTimeout1();
+    void onTimeout2();
+
+
+signals:
+};
+
+#endif // TIMERWIDGET_H
+```
+
+`timer_widget.cpp` 源文件
+```c++
+#include "timer_widget.h"
+
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QTimerEvent>
+
+#define USE_TIMER_EVENT1
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:31
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：定时器事件
+ * <p></p>
+ */
+
+TimerWidget::TimerWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // 1. 添加第一个QLabel
+    lbl1 = new QLabel(this);
+    lbl1->setText("");
+    lbl1->setFrameShape(QFrame::Box);
+    lbl1->setFixedSize(100, 100);
+    lbl1->setStyleSheet("background-color: red;");
+    verticalLayout->addWidget(lbl1);
+
+    // 2. 添加第二个QLabel
+    lbl2 = new QLabel(this);
+    lbl2->setText("");
+    lbl2->setFrameShape(QFrame::Box);
+    lbl2->setFixedSize(100, 100);
+    lbl2->setStyleSheet("background-color: blue;");
+    verticalLayout->addWidget(lbl2);
+
+    // 3. 添加按钮的水平布局
+    QHBoxLayout *horizontalLayout = new QHBoxLayout(this);
+    horizontalLayout->setSpacing(0);
+    horizontalLayout->setContentsMargins(0, 0, 0, 0);
+
+    QPushButton *btnStart = new QPushButton(this);
+    btnStart->setText("开始");
+    horizontalLayout->addWidget(btnStart);
+
+    QPushButton *btnStop = new QPushButton(this);
+    btnStop->setText("停止");
+    horizontalLayout->addWidget(btnStop);
+
+    QPushButton *btnReset = new QPushButton(this);
+    btnReset->setText("复位");
+    horizontalLayout->addWidget(btnReset);
+    verticalLayout->addLayout(horizontalLayout);
+
+    this->setStyleSheet(R"(
+        QPushButton {
+            font-size: 22px;
+        }
+    )");
+
+    connect(btnStart, &QPushButton::clicked, this, &TimerWidget::onStartClicked);
+    connect(btnStop, &QPushButton::clicked, this, &TimerWidget::onStopClicked);
+    connect(btnReset, &QPushButton::clicked, this, &TimerWidget::onResetClicked);
+
+    timer1 = new QTimer(this);
+    connect(timer1, &QTimer::timeout, this, &TimerWidget::onTimeout1);
+
+    timer2 = new QTimer(this);
+    connect(timer2, &QTimer::timeout, this, &TimerWidget::onTimeout2);
+}
+
+void TimerWidget::timerEvent(QTimerEvent *event) {
+    qDebug() << "timerEvent";
+    if (event->timerId() == id1) {
+        lbl1->move(lbl1->x() + 5, lbl1->y());
+        if (lbl1->x() >= this->width()) {
+            lbl1->move(0, lbl1->y());
+        }
+    } else if (event->timerId() == id2) {
+        lbl2->move(lbl2->x() + 5, lbl2->y());
+        if (lbl2->x() >= this->width()) {
+            lbl2->move(0, lbl2->y());
+        }
+    }
+
+}
+
+void TimerWidget::onStartClicked() {
+#ifdef USE_TIMER_EVENT
+    // 时间间隔10ms
+    id1 = startTimer(10);
+    // 时间间隔20ms
+    id2 = startTimer(20);
+#else
+    timer1->start(20);
+    timer2->start(10);
+#endif
+}
+
+void TimerWidget::onStopClicked() {
+#ifdef USE_TIMER_EVENT
+    killTimer(id1);
+    killTimer(id2);
+#else
+    timer1->stop();
+    timer2->stop();
+#endif
+}
+
+void TimerWidget::onResetClicked() {
+    lbl1->move(0, lbl1->y());
+    lbl2->move(0, lbl2->y());
+}
+
+void TimerWidget::onTimeout1() {
+    lbl1->move(lbl1->x() + 5, lbl1->y());
+    if (lbl1->x() >= this->width()) {
+        lbl1->move(0, lbl1->y());
+    }
+}
+
+void TimerWidget::onTimeout2() {
+    lbl2->move(lbl2->x() + 5, lbl2->y());
+    if (lbl2->x() >= this->width()) {
+        lbl2->move(0, lbl2->y());
+    }
+}
+```
 
 
 <br><br>
