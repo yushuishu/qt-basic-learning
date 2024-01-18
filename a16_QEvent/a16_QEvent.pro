@@ -19,6 +19,7 @@ SOURCES += \
     paint_widget.cpp \
     press_move_release_widget.cpp \
     propagate_widget.cpp \
+    texteditx.cpp \
     timer_widget.cpp
 
 HEADERS += \
@@ -31,6 +32,7 @@ HEADERS += \
     paint_widget.h \
     press_move_release_widget.h \
     propagate_widget.h \
+    texteditx.h \
     timer_widget.h
 
 # Default rules for deployment.

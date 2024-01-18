@@ -1,7 +1,7 @@
 #include "drag_widget.h"
 
-#include <QLabel>
 #include <QVBoxLayout>
+#include <texteditx.h>
 
 /**
  * @Author ：谁书-ss
@@ -17,13 +17,10 @@ DragWidget::DragWidget(QWidget *parent)
     : QWidget{parent} {
     QVBoxLayout *verticalLayout = new QVBoxLayout(this);
     verticalLayout->setSpacing(0);
-    verticalLayout->setContentsMargins(0, 0, 0, 0);
+    verticalLayout->setContentsMargins(10, 10, 10, 10);
 
-    QLabel *lbl = new QLabel(this);
-    lbl->setText("拖动事件");
-    lbl->setFrameShape(QFrame::Box);
-    lbl->setFixedHeight(50);
-    lbl->setAlignment(Qt::AlignCenter);
-    lbl->setStyleSheet("background-color: blue;color: white;font-size: 25px");
-    verticalLayout->addWidget(lbl);
+    // 添加自定义控件TextEditX
+    TextEditX *textEditx = new TextEditX(this);
+    textEditx->setPlaceholderText("支持文件拖放的方式，来打开文件");
+    verticalLayout->addWidget(textEditx);
 }

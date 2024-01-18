@@ -1797,7 +1797,227 @@ void TimerWidget::onTimeout2() {
 
 <br><br>
 
-## 拖动事件
+## 拖放事件
+
+- ==QEvent::DragEnter==：当拖动文件进入到窗口/控件中时，触发该事件，它对应的子类是 QDragEnterEvent
+- ==QEvent::DragLeave==：当拖动文件离开窗口/控件时，触发该事件，它对应的子类是 QDragLeaveEvent
+- ==QEvent::DragMove==：当拖动文件在窗口/控件中移动时，触发该事件，它对应的子类是 QDragMoveEvent
+- ==QEvent::Drop==：当拖动文件在窗口/控件中释放时，触发该事件，它对应的子类是 QDropEvent
+
+
+<br><br>
+
+### 自定义控件TextEditX
+
+自定义一个标签控件`TextEditX`，让它继承自`QTextEdit`，然后重写拖放相关的函数。
+
+
+<br><br>
+
+#### 添加自定义控件类TextEditX
+
+首先，在左侧项目文件名上右键，然后选择 “添加新文件”，选择 “C++ Class”，如下：
+
+![Img](./FILES/README.md/img-20240118081924.png)
+
+新建类文件信息如下：
+
+![Img](./FILES/README.md/img-20240118082047.png)
+
+然后，把父类修改为`QTextEdit`，来到`texteditx.h`将父类由`QWidget`修改为`QTextEdit`，如下：
+
+```c++
+#ifndef TEXTEDITX_H
+#define TEXTEDITX_H
+
+#include <QTextEdit>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-18 08:15
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+
+class TextEditX : public QTextEdit {
+    Q_OBJECT
+public:
+    explicit TextEditX(QWidget *parent = nullptr);
+
+signals:
+};
+
+#endif // TEXTEDITX_H
+```
+
+来到`texteditx.cpp`将父类由`QWidget`修改为`QTextEdit`，如下：
+
+```c++
+#include "texteditx.h"
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-18 08:15
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+TextEditX::TextEditX(QWidget *parent)
+    : QTextEdit{parent}
+{}
+```
+
+
+<br><br>
+
+#### 重写拖放函数
+
+首先，来到`textedit.h`，声明这4个拖放函数：
+
+```c++
+#ifndef TEXTEDITX_H
+#define TEXTEDITX_H
+
+#include <QTextEdit>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-18 08:15
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+class TextEditX : public QTextEdit {
+    Q_OBJECT
+public:
+    explicit TextEditX(QWidget *parent = nullptr);
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
+    void dropEvent(QDropEvent *event);
+signals:
+};
+
+#endif // TEXTEDITX_H
+```
+
+然后，来到`textedit.cpp`实现这4个函数（这里仅仅是加一句打印）：
+
+```c++
+#include "texteditx.h"
+
+#include <QDebug>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-18 08:15
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：
+ * <p></p>
+ */
+
+TextEditX::TextEditX(QWidget *parent)
+    : QTextEdit{parent}
+{}
+
+void TextEditX::dragEnterEvent(QDragEnterEvent *event) {
+    qDebug() << "dragEnterEvent";
+
+    // 判断是正常的文件，表明用户可以在这个窗口部件上拖放对象
+    // 默认情况下，窗口部件是不接受拖动的，Qt会自动改变光标来向用户说明这个窗口部件是不是有效的放下点
+    event->acceptProposedAction();
+}
+
+void TextEditX::dragMoveEvent(QDragMoveEvent *event) {
+    qDebug() << "dragMoveEvent";
+}
+
+void TextEditX::dragLeaveEvent(QDragLeaveEvent *event) {
+    qDebug() << "dragLeaveEvent";
+}
+
+void TextEditX::dropEvent(QDropEvent *event) {
+    qDebug() << "dropEvent";
+}
+```
+
+
+<br><br>
+
+#### 将TextEditX显示到界面
+
+来到`drag_widget.cpp`，在构造函数中添加`TextEditX`控件，如下：
+
+```c++
+#include "drag_widget.h"
+
+#include <QVBoxLayout>
+#include <texteditx.h>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:32
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：拖动事件
+ * <p></p>
+ */
+
+DragWidget::DragWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(10, 10, 10, 10);
+
+    // 添加自定义控件TextEditX
+    TextEditX *textEditx = new TextEditX(this);
+    textEditx->setPlaceholderText("支持文件拖放的方式，来打开文件");
+    verticalLayout->addWidget(textEditx);
+}
+```
+
+此时运行程序，效果如下：
+
+![Img](./FILES/README.md/img-20240118094358.gif)
+
+
+<br><br>
+
+### 实现打开文件功能
+
+只需修改`dropEvent()`函数，如下：
+
+```c++
+
+```
+
+
+
+
+<br><br>
+
+### 实现鼠标滚轮放大字体
 
 
 
