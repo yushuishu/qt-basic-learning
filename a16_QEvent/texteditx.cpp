@@ -2,6 +2,9 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QMimeData>
+#include <QApplication>
+
 
 /**
  * @Author ：谁书-ss
@@ -14,8 +17,9 @@
  */
 
 TextEditX::TextEditX(QWidget *parent)
-    : QTextEdit{parent}
-{}
+    : QTextEdit{parent} {
+    this->setAcceptDrops(true);
+}
 
 void TextEditX::dragEnterEvent(QDragEnterEvent *event) {
     qDebug() << "dragEnterEvent";
@@ -37,7 +41,7 @@ void TextEditX::dropEvent(QDropEvent *event) {
     qDebug() << "dropEvent";
 
     QList<QUrl> urls = event->mimeData()->urls();
-    if(urls.isEmpty()) {
+    if (urls.isEmpty()) {
         return;
     }
     QString fileName = urls.first().toLocalFile();
@@ -45,8 +49,25 @@ void TextEditX::dropEvent(QDropEvent *event) {
     qDebug() << urls.first() << "  :  " << fileName;
 
     QFile file(fileName);
-    if(file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) {
         setPlainText(file.readAll());
+    }
+}
+
+void TextEditX::wheelEvent(QWheelEvent *e) {
+    // ctrl键的判断
+    if (QApplication::keyboardModifiers() == Qt::ControlModifier) {
+        // zoomIn/zoomOut可以直接修改字体大小
+        if (e->delta() > 0) {
+            // 滚轮远离使用者, 进行放大
+            this->zoomIn();
+        } else {
+            // 进行缩小
+            this->zoomOut();
+        }
+    } else {
+        // 调用父类的，否则无法实现文本的上下滚动。
+        QTextEdit::wheelEvent(e);
     }
 
 }
