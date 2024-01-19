@@ -25,6 +25,7 @@ void TextEditX::dragEnterEvent(QDragEnterEvent *event) {
     qDebug() << "dragEnterEvent";
 
     // 判断是正常的文件，表明用户可以在这个窗口部件上拖放对象
+
     // 默认情况下，窗口部件是不接受拖动的，Qt会自动改变光标来向用户说明这个窗口部件是不是有效的放下点
     event->acceptProposedAction();
 }
@@ -57,8 +58,9 @@ void TextEditX::dropEvent(QDropEvent *event) {
 void TextEditX::wheelEvent(QWheelEvent *e) {
     // ctrl键的判断
     if (QApplication::keyboardModifiers() == Qt::ControlModifier) {
+        qDebug() << "滚轮滚动大小：" << e->angleDelta().y();
         // zoomIn/zoomOut可以直接修改字体大小
-        if (e->delta() > 0) {
+        if (e->angleDelta().y() > 0) {
             // 滚轮远离使用者, 进行放大
             this->zoomIn();
         } else {
@@ -69,5 +71,4 @@ void TextEditX::wheelEvent(QWheelEvent *e) {
         // 调用父类的，否则无法实现文本的上下滚动。
         QTextEdit::wheelEvent(e);
     }
-
 }

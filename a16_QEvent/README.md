@@ -2016,6 +2016,8 @@ DragWidget::DragWidget(QWidget *parent)
 #include <QDebug>
 #include <QFile>
 #include <QMimeData>
+#include <QApplication>
+
 
 /**
  * @Author ：谁书-ss
@@ -2053,7 +2055,7 @@ void TextEditX::dropEvent(QDropEvent *event) {
     qDebug() << "dropEvent";
 
     QList<QUrl> urls = event->mimeData()->urls();
-    if(urls.isEmpty()) {
+    if (urls.isEmpty()) {
         return;
     }
     QString fileName = urls.first().toLocalFile();
@@ -2061,7 +2063,7 @@ void TextEditX::dropEvent(QDropEvent *event) {
     qDebug() << urls.first() << "  :  " << fileName;
 
     QFile file(fileName);
-    if(file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) {
         setPlainText(file.readAll());
     }
 }
@@ -2069,23 +2071,66 @@ void TextEditX::dropEvent(QDropEvent *event) {
 
 拖放一个桌面文件到 TextEditX 中，效果如下：
 
+![Img](./FILES/README.md/img-20240119090506.png)
 
+<br>
+
+![Img](./FILES/README.md/img-20240119090629.png)
 
 
 <br><br>
 
 ### 实现鼠标滚轮放大字体
 
-以上在 TextEditX 中显示的文本，字体大小固定，接下来实现，通过鼠标滚轮来设置字体大小
+以上在`TextEditX`中显示的文本，字体大小固定，接下来实现，通过鼠标滚轮来设置字体大小
 
-首先，在 texteditx.h 中，声明鼠标滚轮滚动的事件 wheelEvent()，如下：
+首先，在`texteditx.h`中，声明鼠标滚轮滚动的事件`wheelEvent()`，如下：
 
+```c++
+class TextEditX : public QTextEdit {
+protected:
+    void wheelEvent(QWheelEvent* e);
+};
+```
+
+然后，实现`wheelEvent()`函数：
+
+```c++
+#include <QApplication>
+
+void TextEditX::wheelEvent(QWheelEvent *e) {
+    // ctrl键的判断
+    if (QApplication::keyboardModifiers() == Qt::ControlModifier) {
+        qDebug() << "滚轮滚动大小：" << e->angleDelta().y();
+        // zoomIn/zoomOut可以直接修改字体大小
+        if (e->angleDelta().y() > 0) {
+            // 滚轮远离使用者, 进行放大
+            this->zoomIn();
+        } else {
+            // 进行缩小
+            this->zoomOut();
+        }
+    } else {
+        // 调用父类的，否则无法实现文本的上下滚动。
+        QTextEdit::wheelEvent(e);
+    }
+}
+```
+
+此时，运行效果如下：
+
+![Img](./FILES/README.md/img-20240119091219.gif)
 
 
 
 <br><br>
 
 ## 绘图事件
+
+
+
+
+
 
 
 
@@ -2097,6 +2142,22 @@ void TextEditX::dropEvent(QDropEvent *event) {
 
 
 
+
+
+
+
+
+
+
 <br><br>
 
 ## 总结：事件的传递流程
+
+
+
+
+
+
+
+
+
