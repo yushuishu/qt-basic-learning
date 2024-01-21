@@ -2127,6 +2127,50 @@ void TextEditX::wheelEvent(QWheelEvent *e) {
 
 ## 绘图事件
 
+`QEvent::Paint`
+
+当窗口/控件需要重绘时，触发该事件，它对应的子类是`QPaintEvent`
+
+通过一个向`QLabel`上绘制高低温曲线的案例，来讲解绘图事件。
+
+有两种实现方式：
+- 自定义标签控件，并重写`paintEvent()`
+- 事件过滤器，直接绘制到标准`QLabel`
+
+
+<br><br>
+
+### 界面放置高低温标签
+
+
+
+
+
+<br><br>
+
+### 安装事件过滤器
+
+
+
+
+<br><br>
+
+### 实现paintHigh、paintLow
+
+
+
+
+<br><br>
+
+### 产生随机温度
+
+
+
+
+
+<br><br>
+
+### 双击更新高低温曲线
 
 
 
