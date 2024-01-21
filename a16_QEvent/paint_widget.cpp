@@ -19,11 +19,16 @@ PaintWidget::PaintWidget(QWidget *parent)
     verticalLayout->setSpacing(0);
     verticalLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel *lbl = new QLabel(this);
-    lbl->setText("绘图事件");
-    lbl->setFrameShape(QFrame::Box);
-    lbl->setFixedHeight(50);
-    lbl->setAlignment(Qt::AlignCenter);
-    lbl->setStyleSheet("background-color: blue;color: white;font-size: 25px");
-    verticalLayout->addWidget(lbl);
+    // 添加一个Label，用于绘制高温曲线
+    lblHigh = new QLabel(this);
+    lblHigh->setText("");
+    lblHigh->setFrameShape(QFrame::Box);
+    verticalLayout->addWidget(lblHigh);
+
+    // 添加一个Label，用于绘制低温曲线
+    lblLow = new QLabel(this);
+    lblLow->setText("");
+    lblLow->setFrameShape(QFrame::Box);
+    verticalLayout->addWidget(lblLow);
+
 }

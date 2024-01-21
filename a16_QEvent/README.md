@@ -2142,6 +2142,80 @@ void TextEditX::wheelEvent(QWheelEvent *e) {
 
 ### 界面放置高低温标签
 
+首先，在`paint-widget.h`中声明两个标签：
+
+```c++
+#ifndef PAINTWIDGET_H
+#define PAINTWIDGET_H
+
+#include <QWidget>
+#include <QLabel>
+
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:34
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：绘图事件
+ * <p></p>
+ */
+
+class PaintWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit PaintWidget(QWidget *parent = nullptr);
+private:
+    QLabel *lblHigh;
+    QLabel *lblLow;
+signals:
+};
+
+#endif // PAINTWIDGET_H
+```
+
+然后，在`paint-widget.cpp`的构造中显示两个标签：
+
+```c++
+#include "paint_widget.h"
+
+#include <QLabel>
+#include <QVBoxLayout>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:34
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：绘图事件
+ * <p></p>
+ */
+
+PaintWidget::PaintWidget(QWidget *parent)
+    : QWidget{parent} {
+    QVBoxLayout *verticalLayout = new QVBoxLayout(this);
+    verticalLayout->setSpacing(0);
+    verticalLayout->setContentsMargins(0, 0, 0, 0);
+
+    // 添加一个Label，用于绘制高温曲线
+    lblHigh = new QLabel(this);
+    lblHigh->setText("");
+    lblHigh->setFrameShape(QFrame::Box);
+    verticalLayout->addWidget(lblHigh);
+
+    // 添加一个Label，用于绘制低温曲线
+    lblLow = new QLabel(this);
+    lblLow->setText("");
+    lblLow->setFrameShape(QFrame::Box);
+    verticalLayout->addWidget(lblLow);
+
+}
+```
+
+此时，运行效果如下：
+
 
 
 

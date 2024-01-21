@@ -2,6 +2,7 @@
 #define PAINTWIDGET_H
 
 #include <QWidget>
+#include <QLabel>
 
 
 /**
@@ -18,7 +19,9 @@ class PaintWidget : public QWidget {
     Q_OBJECT
 public:
     explicit PaintWidget(QWidget *parent = nullptr);
-
+private:
+    QLabel *lblHigh;
+    QLabel *lblLow;
 signals:
 };
 
