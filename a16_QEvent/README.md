@@ -2216,20 +2216,200 @@ PaintWidget::PaintWidget(QWidget *parent)
 
 此时，运行效果如下：
 
-
-
+![Img](./FILES/README.md/img-20240121173255.png)
 
 
 <br><br>
 
 ### 安装事件过滤器
 
+在当前窗口中拦截两个标签的事件，就需要拦截发给标签的事件
 
+首先，在`paint_widget.cpp`中为标签安装事件过滤器：
+
+```c++
+PaintWidget::PaintWidget(QWidget *parent)
+    : QWidget{parent} {
+    
+	// ...
+
+    lblHigh->installEventFilter(this);
+    lblLow->installEventFilter(this);
+}
+```
+
+然后，在`paint_widget.h`中声明`eventFilter()`函数：
+
+```c++
+class PaintWidget : public QWidget {
+
+    // ...
+
+protected:
+    bool eventFilter(QObject* watched, QEvent* event);
+};
+```
+
+最后，在`paint_widget.cpp`中实现`eventFilter()`函数
+
+```c++
+
+```
+
+具体流程：
+- 窗口刚出现时两个标签需要重绘，框架发送`QEvent::Paint`事件给标签
+- 事件被当前窗口拦截，进而调用其`eventFilter()`方法
+- 在`eventFilter()`中，判断事件类型以及目标控件，来调用绘制高低温曲线的函数
 
 
 <br><br>
 
 ### 实现paintHigh、paintLow
+
+首先，在`paint_widget.h`中声明这两个函数，并声明两个数组，用来记录高温和低温
+
+```c++
+class PaintWidget : public QWidget {
+private:
+    
+    // ...
+
+    // 绘制高低温曲线
+    void paintHigh();
+    void paintLow();
+
+private:
+    int mHighTemp[7] = {0};
+    int mLowTemp[7] = {0};
+
+};
+```
+
+然后，在`paint_widget.cpp`中实现这两个函数
+
+paintHigh() 实现如下：
+
+```c++
+QPainter painter(lblHigh);
+    painter.setRenderHint(QPainter::Antialiasing, true);  // 抗锯齿
+
+    // 1. 计算 x 轴坐标
+    int pointX[7] = {0};
+    for (int i = 0; i < 7; i++) {
+        pointX[i] = lblHigh->pos().x() + PADDING + (lblHigh->width() - PADDING * 2) / 6 * i;
+    }
+
+    // 2. 计算 y 轴坐标
+    // 2.1 计算平均值
+    int tempSum = 0;
+    int tempAverage = 0;
+
+    for (int i = 0; i < 7; i++) {
+        tempSum += mHighTemp[i];
+    }
+
+    tempAverage = tempSum / 7;  // 最高温平均值
+
+    // 2.2 计算 y 轴坐标
+    int pointY[7] = {0};
+    int yCenter = lblHigh->height() / 2;
+    int increment = lblHigh->height() / 20;
+    for (int i = 0; i < 7; i++) {
+        pointY[i] = yCenter - ((mHighTemp[i] - tempAverage) * increment);
+    }
+
+    // 3. 开始绘制
+    // 3.1 初始化画笔
+    QPen pen = painter.pen();
+    pen.setWidth(2);                  //设置画笔宽度为1
+    pen.setColor(QColor(255, 0, 0));  //设置颜色
+
+    painter.setPen(pen);
+    painter.setBrush(QColor(255, 0, 0));  //设置画刷颜色
+    painter.setFont(QFont("Microsoft YaHei", 14));
+
+    // 3.2 画点、写文本
+    for (int i = 0; i < 7; i++) {
+        painter.drawEllipse(QPoint(pointX[i], pointY[i]), POINT_RADIUS, POINT_RADIUS);
+        painter.drawText(QPoint(pointX[i] - TEXT_OFFSET_X, pointY[i] - TEXT_OFFSET_Y), QString::number(mHighTemp[i]) + "°");
+    }
+
+    // 3.3 绘制曲线
+    for (int i = 0; i < 6; i++) {
+        if (i == 0) {
+            pen.setStyle(Qt::DotLine);  //虚线
+            painter.setPen(pen);
+        } else {
+            pen.setStyle(Qt::SolidLine);  // 实线
+            painter.setPen(pen);
+        }
+        painter.drawLine(pointX[i], pointY[i], pointX[i + 1], pointY[i + 1]);
+    }
+```
+
+paintLow() 实现如下：
+
+```c++
+void PaintWidget::paintLow() {
+    QPainter painter(lblLow);
+    painter.setRenderHint(QPainter::Antialiasing, true);  // 抗锯齿
+
+    // 1. 计算 x 轴坐标
+    int pointX[7] = {0};
+    for (int i = 0; i < 7; i++) {
+        pointX[i] = lblLow->pos().x() + PADDING + (lblLow->width() - PADDING * 2) / 6 * i;
+    }
+
+    // 2. 计算 y 轴坐标
+    // 2.1 计算平均值
+    int tempSum = 0;
+    int tempAverage = 0;
+
+    for (int i = 0; i < 7; i++) {
+        tempSum += mLowTemp[i];
+    }
+
+    tempAverage = tempSum / 7;  // 最高温平均值
+
+    // 2.2 计算 y 轴坐标
+    int pointY[7] = {0};
+    int yCenter = lblLow->height() / 2;
+    int increment = lblLow->height() / 20;
+    for (int i = 0; i < 7; i++) {
+        pointY[i] = yCenter - ((mLowTemp[i] - tempAverage) * increment);
+    }
+
+    // 3. 开始绘制
+    // 3.1 初始化画笔
+    QPen pen = painter.pen();
+    pen.setWidth(2);                  // 设置画笔宽度为1
+    pen.setColor(QColor(0, 0, 255));  // 设置颜色
+
+    painter.setPen(pen);
+    painter.setBrush(QColor(0, 0, 255));  //设置画刷颜色
+    painter.setFont(QFont("Microsoft YaHei", 14));
+
+    // 3.2 画点、写文本
+    for (int i = 0; i < 7; i++) {
+        painter.drawEllipse(QPoint(pointX[i], pointY[i]), POINT_RADIUS, POINT_RADIUS);
+        painter.drawText(QPoint(pointX[i] - TEXT_OFFSET_X, pointY[i] - TEXT_OFFSET_Y), QString::number(mLowTemp[i]) + "°");
+    }
+
+    // 3.3 绘制曲线
+    for (int i = 0; i < 6; i++) {
+        if (i == 0) {
+            pen.setStyle(Qt::DotLine);  //虚线
+            painter.setPen(pen);
+        } else {
+            pen.setStyle(Qt::SolidLine);  // 实线
+            painter.setPen(pen);
+        }
+        painter.drawLine(pointX[i], pointY[i], pointX[i + 1], pointY[i + 1]);
+    }
+}
+```
+
+此时，由于数组`mHighTemp`和`mLowTemp`数组的初始值都是`0`，因此绘制出来的是`7`条水平直线的连接，如下：
 
 
 
