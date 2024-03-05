@@ -2,7 +2,10 @@
 #define CONTEXTWIDGET_H
 
 #include <QWidget>
-
+#include <QContextMenuEvent>
+#include <QMenu>
+#include <QAction>
+#include <QCursor>
 
 /**
  * @Author ：谁书-ss
@@ -18,7 +21,17 @@ class ContextWidget : public QWidget {
     Q_OBJECT
 public:
     explicit ContextWidget(QWidget *parent = nullptr);
-
+private:
+    QAction *cut;
+    QAction *copy;
+    QAction *paste;
+    QAction *toUpper;
+    QAction *toLower;
+    QAction *hide;
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
+private slots:
+    void slotAction();
 signals:
 };
 

@@ -2524,19 +2524,140 @@ bool PaintWidget::eventFilter(QObject *watched, QEvent *event) {
 
 ## 右键菜单
 
+`QEvent::ContextMenu`在窗口/控件上点击鼠标右键时，触发该事件，它对应的子类是 `QContextMenuEvent`
 
+首先，在`context_widget.h`中声明几个`QAction`、`槽函数`、`contextMenuEvent()`函数：
 
+```c++
+#ifndef CONTEXTWIDGET_H
+#define CONTEXTWIDGET_H
 
+#include <QWidget>
+#include <QContextMenuEvent>
+#include <QMenu>
+#include <QAction>
+#include <QCursor>
 
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:34
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：右键菜单
+ * <p></p>
+ */
 
+class ContextWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit ContextWidget(QWidget *parent = nullptr);
+private:
+    QAction *cut;
+    QAction *copy;
+    QAction *paste;
+    QAction *toUpper;
+    QAction *toLower;
+    QAction *hide;
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
+private slots:
+    void slotAction();
+signals:
+};
 
+#endif // CONTEXTWIDGET_H
+```
 
+然后，在`context_widget.cpp`的构造中，创建`QAction`并关联槽函数：
+
+```c++
+#include "context_widget.h"
+
+#include <QLabel>
+#include <QVBoxLayout>
+
+/**
+ * @Author ：谁书-ss
+ * @Date ：2024-01-05 15:34
+ * @IDE ：Qt Creator
+ * @Motto ：ABC(Always Be Coding)
+ * <p></p>
+ * @Description ：右键菜单
+ * <p></p>
+ */
+
+ContextWidget::ContextWidget(QWidget *parent)
+    : QWidget{parent} {
+
+    cut = new QAction("剪切(T)", this);
+    copy = new QAction("复制(C)", this);
+    paste = new QAction("粘贴(P)", this);
+    toUpper = new QAction("转成大写(U)", this);
+    toLower = new QAction("转成小写(L)", this);
+    hide = new QAction("隐藏行", this);
+
+    connect(cut, SIGNAL(triggered()), this, SLOT(slotAction()));
+    connect(copy, SIGNAL(triggered()), this, SLOT(slotAction()));
+    connect(paste, SIGNAL(triggered()), this, SLOT(slotAction()));
+    connect(toUpper, SIGNAL(triggered()), this, SLOT(slotAction()));
+    connect(toLower, SIGNAL(triggered()), this, SLOT(slotAction()));
+    connect(hide, SIGNAL(triggered()), this, SLOT(slotAction()));
+}
+```
+
+然后，实现槽函数：
+
+这里使用 QObject 类的 sender() 函数，返回发送该信号的对象
+
+```c++
+void ContextWidget::slotAction()
+{
+    QAction *act = (QAction*)(sender());
+#if 0
+    if(act == cut) {
+        qDebug() << "clot_cut";
+    }
+#endif
+    qDebug() << act->text();
+}
+```
+
+最后，实现`contextMenuEvent()`函数：
+
+```c++
+void ContextWidget::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu* menu = new QMenu();
+
+    //菜单栏显示宽度
+    menu->setFixedWidth(160);
+    menu->addAction(cut);
+    menu->addAction(copy);
+    menu->addAction(paste);
+    menu->addSeparator();
+    menu->addAction(toUpper);
+    menu->addAction(toLower);
+    menu->addSeparator();
+    menu->addAction(hide);
+
+    menu->exec(event->globalPos());
+
+    delete menu;
+}
+```
+
+此时运行结果，就可以弹出菜单，并执行相对于菜单的功能（这里仅仅是打印菜单的文本）：
+
+![Img](./FILES/README.md/img-20240305165025.gif)
 
 
 
 <br><br>
 
 ## 总结：事件的传递流程
+
+
 
 
 
