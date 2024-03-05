@@ -4,8 +4,8 @@
 #include <QVBoxLayout>
 #include <QEvent>
 #include <QDebug>
-
 #include <QPainter>
+#include <QRandomGenerator64>
 
 // 温度曲线相关的宏
 #define PADDING       50
@@ -17,6 +17,7 @@
 #define TEXT_OFFSET_X 12
 // 温度文本相对于点的偏移
 #define TEXT_OFFSET_Y 10
+
 
 
 /**
@@ -46,6 +47,8 @@ PaintWidget::PaintWidget(QWidget *parent)
     lblLow->setText("");
     lblLow->setFrameShape(QFrame::Box);
     verticalLayout->addWidget(lblLow);
+
+    updateTemp();
 
     // 为标签安装事件过滤器
     lblHigh->installEventFilter(this);
@@ -179,7 +182,16 @@ void PaintWidget::paintLow() {
     }
 }
 
-bool PaintWidget::eventFIlter(QObject *watched, QEvent *event) {
+void PaintWidget::updateTemp() {
+    for ( int i = 0; i < 7; i++ ) {
+        mHighTemp[i] = 20 + QRandomGenerator::global()->generate() % 10;
+        mLowTemp[i] = -5 + QRandomGenerator::global()->generate() % 10;
+    }
+    lblHigh->update();
+    lblLow->update();
+}
+
+bool PaintWidget::eventFilter(QObject *watched, QEvent *event) {
     if (event->type() == QEvent::Paint) {
         if (watched == lblHigh) {
             paintHigh();
@@ -189,6 +201,8 @@ bool PaintWidget::eventFIlter(QObject *watched, QEvent *event) {
             paintLow();
             qDebug() << "paint lblLow";
         }
+    } else if(event->type() == QEvent::MouseButtonDblClick) {
+        updateTemp();
     }
     return QWidget::eventFilter(watched, event);
 }

@@ -26,13 +26,15 @@ private:
     // 绘制高低温曲线
     void paintHigh();
     void paintLow();
+    // 更新高低温
+    void updateTemp();
 
 private:
     int mHighTemp[7] = {0};
     int mLowTemp[7] = {0};
 
 protected:
-    bool eventFIlter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event);
 signals:
 };
 

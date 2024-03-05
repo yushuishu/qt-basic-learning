@@ -2253,6 +2253,20 @@ protected:
 最后，在`paint_widget.cpp`中实现`eventFilter()`函数
 
 ```c++
+bool PaintWidget::eventFilter(QObject* watched, QEvent* event)
+{
+    if ( event->type() == QEvent::Paint ) {
+        if ( watched == lblHigh ) {
+            // paintHigh();  // 后边实现
+            qDebug() << "paint lblHigh";
+        }
+        if ( watched == lblLow ) {
+            // paintLow();  // 后边实现
+            qDebug() << "paint lblLow";
+        }
+    }
+    return QWidget::eventFilter(watched, event);
+}
 
 ```
 
@@ -2411,6 +2425,7 @@ void PaintWidget::paintLow() {
 
 此时，由于数组`mHighTemp`和`mLowTemp`数组的初始值都是`0`，因此绘制出来的是`7`条水平直线的连接，如下：
 
+![Img](./FILES/README.md/img-20240305155642.png)
 
 
 
@@ -2418,7 +2433,53 @@ void PaintWidget::paintLow() {
 
 ### 产生随机温度
 
+接下来，随机生成高温数组、低温数组
 
+首先，在`paint_widget.h`中声明一个 updateTemp 的函数
+
+```c++
+class PaintWidget : public QWidget
+{
+private:
+    // 更新高低温
+    void updateTemp();
+};
+```
+
+然后，在`paint_widget.cpp`中实现`updateTemp()`函数：
+
+```c++
+#include <QRandomGenerator64>
+
+void PaintWidget::updateTemp()
+{
+    for ( int i = 0; i < 7; i++ ) {
+        mHighTemp[i] = 20 + QRandomGenerator::global()->generate() % 10;
+        mLowTemp[i] = -5 + QRandomGenerator::global()->generate() % 10;
+    }
+
+    lblHigh->update();
+    lblLow->update();
+}
+```
+
+最后，在`paint_widget.cpp`的构造中，手动调用`updateTemp()`函数：
+
+```c++
+PaintWidget::PaintWidget(QWidget* parent) : QWidget{parent}
+{
+    // ...
+
+    updateTemp();
+
+    lblHigh->installEventFilter(this);
+    lblLow->installEventFilter(this);
+}
+```
+
+此时，再次运行后，就可以生成高低温曲线了，如下：
+
+![Img](./FILES/README.md/img-20240305160402.png)
 
 
 
@@ -2426,10 +2487,36 @@ void PaintWidget::paintLow() {
 
 ### 双击更新高低温曲线
 
+在`eventFilter()`中，拦截鼠标双击事件，如下：
 
+```c++
+bool PaintWidget::eventFilter(QObject *watched, QEvent *event) {
+    if (event->type() == QEvent::Paint) {
+        if (watched == lblHigh) {
+            paintHigh();
+            qDebug() << "paint lblHigh";
+        }
+        if (watched == lblLow) {
+            paintLow();
+            qDebug() << "paint lblLow";
+        }
+    } else if(event->type() == QEvent::MouseButtonDblClick) {
+        updateTemp();
+    }
+    return QWidget::eventFilter(watched, event);
+}
+```
 
+此时，每次双击鼠标，就可以刷新高低温曲线了，如下：
 
+![Img](./FILES/README.md/img-20240305161610.gif)
 
+此时整体调用流程：
+
+- 拦截标签的双击事件，调用 updateTemp() 函数
+- ==lblHigh->update()== 表示要重绘标签，框架发送 ==QEvent::Paint== 事件给标签
+- 事件被窗口拦截，进而调用其 ==eventFilter()==
+- 在 ==eventFilter()== 中，调用 ==paintHigh()== 和 ==paintLow()== 来真正在标签上绘制曲线
 
 
 
