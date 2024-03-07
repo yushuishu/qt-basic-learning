@@ -1,7 +1,8 @@
 #include "propagate_widget.h"
 
-#include <QLabel>
+
 #include <QVBoxLayout>
+#include <QEvent>
 
 /**
  * @Author ：谁书-ss
@@ -19,11 +20,25 @@ PropagateWidget::PropagateWidget(QWidget *parent)
     verticalLayout->setSpacing(0);
     verticalLayout->setContentsMargins(0, 0, 0, 0);
 
-    QLabel *lbl = new QLabel(this);
-    lbl->setText("总结：事件的传递流程");
+    // 1. 添加一个自定义的标签 LabelX
+    lbl = new PropagateLabel(this);
+    lbl->setText("");
     lbl->setFrameShape(QFrame::Box);
     lbl->setFixedHeight(50);
     lbl->setAlignment(Qt::AlignCenter);
-    lbl->setStyleSheet("background-color: blue;color: white;font-size: 25px");
+    lbl->setStyleSheet("background-color: red;color: white;font-size: 25px");
     verticalLayout->addWidget(lbl);
+
+    lbl->installEventFilter(this);
+}
+
+void PropagateWidget::mousePressEvent(QMouseEvent *event) {
+    qDebug() << "PropagateWidget::mousePressEvent";
+}
+
+bool PropagateWidget::eventFilter(QObject *watched, QEvent *event) {
+    if (watched == lbl && event->type() == QEvent::MouseButtonPress) {
+        qDebug() << "PropagateWidget::eventFilter";
+    }
+    return QWidget::eventFilter(watched, event);
 }

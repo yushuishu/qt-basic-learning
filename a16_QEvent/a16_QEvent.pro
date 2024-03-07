@@ -19,6 +19,7 @@ SOURCES += \
     paint_widget.cpp \
     press_move_release_widget.cpp \
     propagate_widget.cpp \
+    propagatelabel.cpp \
     texteditx.cpp \
     timer_widget.cpp
 
@@ -32,6 +33,7 @@ HEADERS += \
     paint_widget.h \
     press_move_release_widget.h \
     propagate_widget.h \
+    propagatelabel.h \
     texteditx.h \
     timer_widget.h
 
@@ -39,3 +41,6 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    README.md

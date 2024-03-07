@@ -2,7 +2,7 @@
 #define PROPAGATEWIDGET_H
 
 #include <QWidget>
-
+#include "propagatelabel.h"
 
 /**
  * @Author ：谁书-ss
@@ -18,7 +18,10 @@ class PropagateWidget : public QWidget {
     Q_OBJECT
 public:
     explicit PropagateWidget(QWidget *parent = nullptr);
-
+private:
+    PropagateLabel* lbl;
+    void mousePressEvent(QMouseEvent* event);
+    bool eventFilter(QObject *watched, QEvent *event);
 signals:
 };
 
