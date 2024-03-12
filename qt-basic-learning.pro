@@ -16,7 +16,8 @@ TEMPLATE = subdirs
     a13_QProgressBar \
     a14_QListWidget \
     a15_QTableWidget \
-    a16_QEvent
+    a16_QEvent \
+    a17_QEvent_JWindow
 
         OTHER_FILES += \
             README.md \
